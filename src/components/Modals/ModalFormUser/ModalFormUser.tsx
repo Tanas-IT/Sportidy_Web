@@ -17,9 +17,7 @@ import { themeColors } from "../../../constants/GlobalStyles";
 import { CurrentForm } from "../../../constants/Enum";
 import { BrandForm } from "../../../models/BrandForm.model";
 import { UserForm } from "../../../models/UserForm.model";
-import {
-  validateUserForm,
-} from "../../../utils/validation";
+import { validateUserForm } from "../../../utils/validation";
 import {
   generateUsernameFromBranch,
   generateUsernameFromBrand,
@@ -68,23 +66,21 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
       ? generateUsernameFromBrand(brandName)
       : userData.userName.value;
   } else if (formPrevious === CurrentForm.BRANCH) {
-    initialUserNameValue = branch
-      ? generateUsernameFromBranch(branch)
-      : userData.userName.value;
+    initialUserNameValue = branch ? generateUsernameFromBranch(branch) : userData.userName.value;
   }
 
   const [formData, setFormData] = useState<UserForm>({
+    userId: { value: userData.userId.value, errorMessage: "" },
     fullName: { value: userData.fullName.value, errorMessage: "" },
     userName: {
-      value: initialUserNameValue
-        ? initialUserNameValue
-        : userData.userName.value,
+      value: initialUserNameValue ? initialUserNameValue : userData.userName.value,
       errorMessage: "",
     },
     phoneNumber: { value: userData.phoneNumber.value, errorMessage: "" },
     DOB: { value: userData.DOB.value, errorMessage: "" },
-    gender: { value: userData.gender.value || "Nam", errorMessage: "" },
-    isActive: { value: userData.isActive.value || 0, errorMessage: "" },
+    gender: { value: userData.gender.value || 1, errorMessage: "" },
+    isDeleted: { value: userData.isDeleted.value || 0, errorMessage: "" },
+    description: { value: userData.description.value, errorMessage: "" },
   });
 
   const handleInputChange = (field: keyof UserForm, value: string) => {
@@ -106,14 +102,22 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
   const handleGenderChange = (value: string) => {
     setFormData((prevData) => ({
       ...prevData,
-      gender: { value, errorMessage: "" },
+      gender: { value: Number(value), errorMessage: "" },
+    }));
+  };
+
+  const handleDescriptionChange = (field: keyof UserForm, value: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      [field]: { value, errorMessage: "" },
     }));
   };
 
   const handleIsActiveChange = (value: string) => {
+    console.log("Is Active Test: ", Number(value));
     setFormData((prevData) => ({
       ...prevData,
-      isActive: { value: Number(value), errorMessage: "" },
+      isDeleted: { value: Number(value), errorMessage: "" },
     }));
   };
 
@@ -141,13 +145,16 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
 
   const handleSaveForm = () => {
     const errors = validateUserForm(formData);
+    console.log("Form Data", formData);
     const updatedFormData = {
+      userId: { ...formData.userId, errorMessage: "" },
       fullName: { ...formData.fullName, errorMessage: errors.fullName },
-      userName: { ...formData.userName, errorMessage: "" }, 
+      userName: { ...formData.userName, errorMessage: "" },
       phoneNumber: { ...formData.phoneNumber, errorMessage: errors.phoneNumber },
       DOB: { ...formData.DOB, errorMessage: errors.DOB },
       gender: { ...formData.gender, errorMessage: "" },
-      isActive: { ...formData.isActive, errorMessage: "" },
+      isDeleted: { ...formData.isDeleted, errorMessage: "" },
+      description: { ...formData.description, errorMessage: "" },
     };
 
     setFormData(updatedFormData);
@@ -171,18 +178,14 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
   return (
     <>
       <ModalBody>
-        <Flex
-          direction="column"
-          alignItems="stretch"
-          className={styles.containerForm}
-        >
+        <Flex direction="column" alignItems="stretch" className={styles.containerForm}>
           <Flex justify="space-between" mb={3}>
             <Box flex="1" ml={2}>
               <Text className={styles.textFontWeight600} py={3} pr={3}>
-                Họ và tên
+                FullName
               </Text>
               <Input
-                placeholder="Họ và tên"
+                placeholder="FullName"
                 pl={3}
                 value={formData.fullName.value}
                 onChange={(e) => handleInputChange("fullName", e.target.value)}
@@ -191,34 +194,42 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
                 <Text color="red.500">{formData.fullName.errorMessage}</Text>
               )}
             </Box>
+            <Input pl={3} type="hidden" value={formData.userId.value} />
           </Flex>
 
           <Flex justify="space-between" mb={3}>
             <Box flex="1" ml={2}>
               <Text className={styles.textFontWeight600} py={3} pr={3}>
-                Tên tài khoản
+                Username
+              </Text>
+              <Input readOnly placeholder="UserName" pl={3} value={formData.userName.value} />
+            </Box>
+            <Box flex="1" ml={2}>
+              <Text className={styles.textFontWeight600} py={3} pr={3}>
+                Description
               </Text>
               <Input
-                readOnly
-                placeholder="Tên tài khoản"
+                placeholder="Description"
                 pl={3}
-                value={formData.userName.value}
+                value={formData.description.value}
+                onChange={(e) => handleDescriptionChange("description", e.target.value)}
               />
+              {formData.description.errorMessage && (
+                <Text color="red.500">{formData.description.errorMessage}</Text>
+              )}
             </Box>
           </Flex>
 
           <Flex justify="space-between" mb={3} ml={2}>
             <Box flex="1">
               <Text className={styles.textFontWeight600} py={3} pr={3}>
-                Số điện thoại
+                Phone
               </Text>
               <Input
-                placeholder="Số điện thoại"
+                placeholder="Phone"
                 pl={3}
                 value={formData.phoneNumber.value}
-                onChange={(e) =>
-                  handleInputChange("phoneNumber", e.target.value)
-                }
+                onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
               />
               {formData.phoneNumber.errorMessage && (
                 <Text color="red.500">{formData.phoneNumber.errorMessage}</Text>
@@ -227,16 +238,12 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
 
             <Box flex="1" ml={3}>
               <Text className={styles.textFontWeight600} py={3} pr={3}>
-                Ngày sinh
+                Date Of Birth
               </Text>
               <Input
                 type="date"
                 pl={3}
-                value={
-                  formData.DOB.value
-                    ? formData.DOB.value.toISOString().split("T")[0]
-                    : ""
-                }
+                value={formData.DOB.value ? formData.DOB.value.toISOString().split("T")[0] : ""}
                 onChange={(e) => handleDateChange("DOB", e.target.value)}
               />
               {formData.DOB.errorMessage && (
@@ -248,37 +255,34 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
           <Flex justify="space-between" mb={3}>
             <Box flex="1" ml={3}>
               <Text className={styles.textFontWeight600} py={3} pr={3} mb={2}>
-                Giới tính
+                Gender
               </Text>
-              <RadioGroup
-                value={formData.gender.value}
-                onChange={handleGenderChange}
-              >
+              <RadioGroup value={formData.gender.value?.toString()} onChange={handleGenderChange}>
                 <Stack spacing={5} direction="row" ml={3}>
-                  <Radio value="Nam">
-                    <Text className={styles.textFontWeight600}>Nam</Text>
+                  <Radio value="1">
+                    <Text className={styles.textFontWeight600}>Male</Text>
                   </Radio>
-                  <Radio value="Nữ">
-                    <Text className={styles.textFontWeight600}>Nữ</Text>
+                  <Radio value="2">
+                    <Text className={styles.textFontWeight600}>Female</Text>
                   </Radio>
                 </Stack>
               </RadioGroup>
             </Box>
             <Box flex="1" ml={3}>
               <Text className={styles.textFontWeight600} py={3} pr={3}>
-                Đang hoạt động
+                Active
               </Text>
               <Select
                 id="isActive"
+                value={formData.isDeleted.value}
                 className={styles.isActive}
-                value={formData.isActive.value ?? ""}
                 onChange={(e) => handleIsActiveChange(e.target.value)}
               >
                 <option disabled hidden value="">
                   Select one
                 </option>
-                <option value="1">Hoạt động</option>
-                <option value="0">Không hoạt động</option>
+                <option value="0">Yes</option>
+                <option value="1">No</option>
               </Select>
             </Box>
           </Flex>
@@ -291,16 +295,16 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
             color="white"
             onClick={openFormPreviousHandler}
           >
-            Quay lại
+            Back
           </Button>
         )}
 
         <Flex>
           <Button className={styles.CancelBtn} onClick={cancelHandler}>
-            Huỷ
+            Cancel
           </Button>
           <Button onClick={handleSaveForm} className={styles.MainBtn}>
-            Lưu
+            Save
           </Button>
         </Flex>
       </ModalFooter>

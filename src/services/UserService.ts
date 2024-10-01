@@ -9,11 +9,13 @@ export const getUsers = async (
   currentPage: number,
   rowsPerPage: number,
   searchValue: string,
-  brandId: string | null,
+  sortby: string | null,
+  direction: string | null,
 ): Promise<GetData<UserData>> => {
-  const res = await axiosAuth.get("app-users", {
+  const res = await axiosAuth.get("users", {
     params: {
-      brandId: brandId || null,
+      sortby: sortby || null,
+      direction: direction || null,
       pageNumber: currentPage,
       pageSize: rowsPerPage,
       searchKey: searchValue,
@@ -38,43 +40,19 @@ export const createUser = async (user: UserForm, roleId: number): Promise<ApiRes
 };
 
 export const getUser = async (id: number): Promise<ApiResponse<UserData>> => {
-  const res = await axiosAuth.get("app-users/get-by-id", {
-    params: {
-      id: id,
-    },
-  });
+  const res = await axiosAuth.get(`users/${id}`);
   const apiResponse = res.data as ApiResponse<UserData>;
   return apiResponse;
 };
 
-export const updateUser = async (
-  id: number,
-  brandId: string | null,
-  user: userUpdate,
-): Promise<ApiResponse<Object>> => {
-  const params: Record<string, any> = { id: id };
-  if (brandId !== null) {
-    params["brand-id"] = brandId;
-  }
-
-  const res = await axiosAuth.put(`app-users`, user, { params: params });
+export const updateUser = async (id: number, user: userUpdate): Promise<ApiResponse<Object>> => {
+  const res = await axiosAuth.put(`users/update-user`, user);
   const apiResponse = res.data as ApiResponse<Object>;
   return apiResponse;
 };
 
-export const deleteUser = async (
-  id: number,
-  brandId: string | null,
-): Promise<ApiResponse<Object>> => {
-  const params: Record<string, any> = { id: id };
-
-  if (brandId !== null) {
-    params["brandId"] = brandId;
-  }
-
-  const res = await axiosAuth.delete("app-users", {
-    params: params,
-  });
+export const deleteUser = async (id: number): Promise<ApiResponse<Object>> => {
+  const res = await axiosAuth.delete(`users/delete-user/${id}`);
   const apiResponse = res.data as ApiResponse<Object>;
   return apiResponse;
 };

@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import style from "./Sidebar.module.scss";
 import React, { useState, useEffect } from "react";
-import { CgAddR } from "react-icons/cg";
 import { MdLogout } from "react-icons/md";
 import { IoIosArrowForward } from "react-icons/io";
 import { Link as ReactRouterLink, useLocation, useNavigate } from "react-router-dom";

@@ -4,7 +4,14 @@ import { PasswordForm } from "../models/Password.model";
 import { ProductForm } from "../models/ProductForm.model";
 import { UserForm } from "../models/UserForm.model";
 import { LimitBrandData } from "../payloads/responses/BrandData.model";
-import { AdminDashboardData, BrandDashboardData } from "../payloads/responses/DashboarData.model";
+import {
+  AdminDashboardData,
+  AdminPaymentDasboardData,
+  AdminPlayFieldDashboardData,
+  AdminRevenueDashboardData,
+  AdminUserDashboardData,
+  BrandDashboardData,
+} from "../payloads/responses/DashboarData.model";
 import { PlanData } from "../payloads/responses/PlanResponse.model";
 import { SubscriptionData } from "../payloads/responses/SubscriptionData.model";
 import { UserData } from "../payloads/responses/UserData.model";
@@ -76,6 +83,30 @@ export const getInitialAdminDashboardData = (): AdminDashboardData => ({
   listBrandCounts: [],
   latestUsers: [],
   recentTransactions: [],
+});
+
+export const getInitialAdminRevenueDashboardData = (): AdminRevenueDashboardData => ({
+  year: 0,
+  monthlyRevenues: [{ month: 0, revenue: 0 }],
+  totalRevenue: 0,
+});
+
+export const getInitialAdminUserDashboardData = (): AdminUserDashboardData => ({
+  totalUsers: 0,
+  monthlyStatistics: [{ month: 0, userCount: 0 }],
+});
+
+export const getInitialAdminPlayFieldDashboardData = (): AdminPlayFieldDashboardData => ({
+  totalPlayField: 0,
+  totalBooking: 0,
+  fieldPercentages: [{ fieldTypeName: "", percentage: 0 }],
+});
+
+export const getInitialAdminPaymentDashboardData = (): AdminPaymentDasboardData => ({
+  fullName: "",
+  dateOfTransaction: "",
+  status: "",
+  totalAmount: 0,
 });
 
 export const getInitialBrandDashboardData = (): BrandDashboardData => ({

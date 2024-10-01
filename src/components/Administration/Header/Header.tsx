@@ -27,6 +27,7 @@ import { useEffect, useState } from "react";
 import i18n from "../../../i18n/i18n";
 import { getRoleName } from "../../../utils/functionHelper";
 import { UserRole } from "../../../constants/Enum";
+import { jwtDecode } from "jwt-decode";
 
 function Header() {
   const location = useLocation();
@@ -41,7 +42,8 @@ function Header() {
 
   const brandName = localStorage.getItem("BrandName");
   const logoUrl = localStorage.getItem("BrandLogo");
-  const roleId = localStorage.getItem("RoleId");
+  const roleId = localStorage.getItem("role");
+  const decodedAccessToken = jwtDecode(localStorage.getItem("AccessToken") || "");
 
   const getInitialLanguage = () => {
     const savedLanguage = localStorage.getItem("language");
@@ -56,9 +58,7 @@ function Header() {
     localStorage.setItem("language", lng);
   };
 
-  const handleLanguageChange = (
-    selectedOption: SingleValue<{ value: string; label: string }>,
-  ) => {
+  const handleLanguageChange = (selectedOption: SingleValue<{ value: string; label: string }>) => {
     if (selectedOption) {
       const selectedLanguage = selectedOption.value === "en" ? "en" : "vi";
       changeLanguage(selectedLanguage);
@@ -101,9 +101,9 @@ function Header() {
     return savedHeaderSticky === "sticky" ? "sticky" : "relative";
   };
 
-  const [headerSticky, setHeaderSticky] = useState<
-    ResponsiveValue<PositionValue>
-  >(getInitialHeaderSticky());
+  const [headerSticky, setHeaderSticky] = useState<ResponsiveValue<PositionValue>>(
+    getInitialHeaderSticky(),
+  );
 
   const generateBreadcrumbItems = () => {
     const items = [];
@@ -148,9 +148,7 @@ function Header() {
       <Flex flexDirection="column">
         <Breadcrumb fontSize="16px">{generateBreadcrumbItems()}</Breadcrumb>
         <Text className={style.PathName}>
-          {translatedPathname === "THỰC ĐƠN / CREATE-MENU"
-            ? "TẠO MENU"
-            : translatedPathname}
+          {translatedPathname === "THỰC ĐƠN / CREATE-MENU" ? "TẠO MENU" : translatedPathname}
         </Text>
       </Flex>
       <Flex className={style.Content}>
@@ -183,45 +181,16 @@ function Header() {
                   <Flex>
                     <Image
                       src={logoUrl ? logoUrl : "https://bit.ly/dan-abramov"}
-                      className={
-                        !logoUrl ? style.ProfileImageAdmin : style.ProfileImage
-                      }
+                      className={!logoUrl ? style.ProfileImageAdmin : style.ProfileImage}
                     />
                     <Flex className={style.ProfileInfo}>
-                      <Text className={style.ProfileName}>
-                        {brandName ? brandName : "Admin"}
-                      </Text>
-                      <Text className={style.ProfileRole}>
-                        {getRoleName(Number(roleId))}
-                      </Text>
+                      <Text className={style.ProfileName}>Name: {decodedAccessToken.FullName}</Text>
+                      <Text className={style.ProfileRole}>Role: Admin</Text>
                     </Flex>
                   </Flex>
-                  {Number(roleId) === UserRole.BrandManager ? (
-                    <RiArrowDropDownLine className={style.DropdownIcon} />
-                  ) : (
-                    <Flex className={style.DropdownIcon}></Flex>
-                  )}
                 </Flex>
               </Button>
             </PopoverTrigger>
-            {Number(roleId) === UserRole.BrandManager && (
-              <PopoverContent className={style.PopupContainer}>
-                <PopoverArrow />
-                <PopoverBody>
-                  <Flex className={style.PopupNav}>
-                    <ChakraLink
-                      as={ReactRouterLink}
-                      to="/profile"
-                      style={{ textDecoration: "none" }}
-                    >
-                      <Flex className={style.PopupSubNav}>
-                        <Text className={style.Text}>Hồ sơ cá nhân</Text>
-                      </Flex>
-                    </ChakraLink>
-                  </Flex>
-                </PopoverBody>
-              </PopoverContent>
-            )}
           </Popover>
         </Flex>
       </Flex>

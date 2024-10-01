@@ -1,15 +1,19 @@
 export interface UserData {
   userCode: string;
   userId: number;
-  fullname: string;
+  fullName: string;
   userName: string;
-  dob: Date;
-  gender: "Male" | "Female";
+  birtday: Date;
+  gender: number;
   phone: string;
   roleId: number;
+  roleName: string;
   createDate: Date;
-  isActive: boolean;
+  isDeleted: number;
   status: number;
   updateBy: string;
   updateDate: Date;
+  address: string;
+  description: string;
+  avatar: string;
 }
