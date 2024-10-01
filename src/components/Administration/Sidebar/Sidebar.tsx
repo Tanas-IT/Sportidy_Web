@@ -131,7 +131,7 @@ function Sidebar() {
     if (Array.isArray(menuItem.permissionRole)) {
       return menuItem.permissionRole.toString().includes(roleId);
     }
-    return menuItem.permissionRole.toString() === roleId;
+    return menuItem.permissionRole === roleId;
   });
 
   const currentPathPart = getMenuPartFromPathname(location.pathname);
@@ -165,7 +165,7 @@ function Sidebar() {
                 !menuItem.isDisabled
                   ? menuItem.to
                     ? () => changeItem(menuItem.label)
-                    : menuItem.onclick
+                    : () => changeItem("")
                   : undefined
               }
               backgroundColor={

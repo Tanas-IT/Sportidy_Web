@@ -64,7 +64,7 @@ function User() {
           await loadData();
         }
       } catch (err) {
-        toast.error("No user match with that search value");
+        setIsInitialLoad(false);
         setIsLoading(false);
       }
     },

@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 import i18n from "../../../i18n/i18n";
 import { getRoleName } from "../../../utils/functionHelper";
 import { UserRole } from "../../../constants/Enum";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
 function Header() {
   const location = useLocation();
@@ -40,10 +40,8 @@ function Header() {
   const translatedPathParts = pathParts.map((part) => t(part));
   const translatedPathname = translatedPathParts.join(" / ").toUpperCase();
 
-  const brandName = localStorage.getItem("BrandName");
   const logoUrl = localStorage.getItem("BrandLogo");
-  const roleId = localStorage.getItem("role");
-  const decodedAccessToken = jwtDecode(localStorage.getItem("AccessToken") || "");
+  const decodedAccessToken: JwtPayload = jwtDecode(localStorage.getItem("AccessToken") || "");
 
   const getInitialLanguage = () => {
     const savedLanguage = localStorage.getItem("language");

@@ -14,20 +14,16 @@ interface GuestLayoutProps {
 
 const GuestLayout: React.FC<GuestLayoutProps> = ({ children }) => {
   const isLoggedIn =
-    localStorage.getItem("AccessToken") !== null &&
-    localStorage.getItem("RefreshToken") !== null;
+    localStorage.getItem("AccessToken") !== null && localStorage.getItem("RefreshToken") !== null;
   const navigate = useNavigate();
 
   useEffect(() => {
     const roleId = localStorage.getItem("RoleId");
     const isLoggedIn =
-      localStorage.getItem("AccessToken") !== null &&
-      localStorage.getItem("RefreshToken") !== null;
+      localStorage.getItem("AccessToken") !== null && localStorage.getItem("RefreshToken") !== null;
     if (isLoggedIn && roleId !== null) {
       if (roleId.toString() === UserRole.Admin.toString()) {
         navigate("/admin-dashboard");
-      } else if (roleId.toString() === UserRole.BrandManager.toString()) {
-        navigate("/brand-dashboard");
       }
     }
   });

@@ -227,6 +227,7 @@ function AdminDashboard() {
           setUserData(userDashboard.data);
           setRevenueData(dataRevenue);
           setPlayFieldData(playFieldDashboard);
+
           setPaymentData(paymentDashboard.data);
           setIsLoading(false);
         }
@@ -299,7 +300,7 @@ function AdminDashboard() {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {paymentData?.length
+                    {paymentData != null
                       ? paymentData.map((transaction, index) => (
                           <Tr key={index}>
                             <Td className={style.textDescription}>

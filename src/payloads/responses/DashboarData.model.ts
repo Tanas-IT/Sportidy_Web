@@ -35,6 +35,14 @@ interface fieldPercentages {
   fieldTypeName: string;
   percentage: number;
 }
+
+interface paymentData {
+  email: string;
+  dateOfTransaction: Date;
+  totalAmount: number;
+  status: number;
+}
+
 export interface AdminRevenueDashboardData {
   year: number;
   monthlyRevenues: [monthlyRevenue];
@@ -52,12 +60,7 @@ export interface AdminPlayFieldDashboardData {
   fieldPercentages: [fieldPercentages];
 }
 
-export interface AdminPaymentDasboardData {
-  email: string;
-  dateOfTransaction: Date;
-  totalAmount: number;
-  status: number;
-}
+export interface AdminPaymentDasboardData extends Array<paymentData> {}
 // ----------------------------------------------------------------
 
 interface timesRecomments {

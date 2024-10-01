@@ -60,7 +60,7 @@ const ModalFormUser: React.FC<ModalFormBrandProps> = ({
   userData,
   branch,
 }) => {
-  var initialUserNameValue = "";
+  let initialUserNameValue = "";
   if (formPrevious === CurrentForm.BRAND) {
     initialUserNameValue = brandName
       ? generateUsernameFromBrand(brandName)

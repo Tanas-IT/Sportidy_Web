@@ -33,7 +33,7 @@ export const createUser = async (user: UserForm, roleId: number): Promise<ApiRes
     dob: user.DOB.value ? user.DOB.value.toISOString().split("T")[0] : "",
     gender: user.gender.value,
     roleId: roleId,
-    isActive: user.isActive.value === 1 ? true : false,
+    isActive: user.isDeleted.value === 1 ? true : false,
   });
   const apiResponse = res.data as ApiResponse<Number>;
   return apiResponse;

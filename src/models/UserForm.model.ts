@@ -28,7 +28,7 @@ export interface UserForm {
     errorMessage: string;
   };
   isDeleted: {
-    value: number | null;
+    value: number;
     errorMessage: string;
   };
 }
