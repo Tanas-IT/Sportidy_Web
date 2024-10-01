@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { toast } from "react-toastify";
-import { convertKeysToCamelCase, convertKeysToKebabCase } from "../utils/keyCaseConverter";
+import { convertKeysToCamelCase } from "../utils/keyCaseConverter";
 import { refreshToken } from "../services/AuthenticationService";
 
 const API_HOST = import.meta.env.VITE_API_HOST;
