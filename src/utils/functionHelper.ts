@@ -70,22 +70,23 @@ export const formatDateAndTime = (date: Date): string => {
 
 export const getRoleName = (roleId: number): string => {
   if (roleId === UserRole.Admin) {
-    return "Quản trị viên";
-  } else if (roleId === UserRole.BrandManager) {
-    return "Quản lý thương hiệu";
-  } else if (roleId === UserRole.BranchManager) {
-    return "Quản lý chi nhánh";
+    return "Admin";
+  } else if (roleId === UserRole.SportOwner) {
+    return "Sport Owner";
+  } else if (roleId === UserRole.Player) {
+    return "Player";
   }
   return UserRole[roleId] ? `Vai trò: ${UserRole[roleId]}` : "Vai trò không xác định";
 };
 
-export const getGender = (gender: string): string => {
-  if (gender === "Male") {
-    return "Nam";
-  } else if (gender === "Female") {
-    return "Nữ";
+export const getGender = (gender: number): string => {
+  if (gender === 1) {
+    return "Male";
+  } else if (gender === 2) {
+    return "Female";
+  } else {
+    return "Others";
   }
-  return gender;
 };
 
 export const formatTime = (time: number) => {

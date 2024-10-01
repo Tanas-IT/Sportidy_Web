@@ -5,8 +5,8 @@ export enum CurrentForm {
 
 export enum UserRole {
   Admin = 1,
-  BrandManager = 2,
-  BranchManager = 3,
+  SportOwner = 2,
+  Player = 3,
 }
 
 export enum PaymentStatus {

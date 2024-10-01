@@ -1,10 +1,18 @@
+import { isDate } from "util/types";
 import { BranchForm } from "../models/BranchForm.model";
 import { BrandForm } from "../models/BrandForm.model";
 import { PasswordForm } from "../models/Password.model";
 import { ProductForm } from "../models/ProductForm.model";
 import { UserForm } from "../models/UserForm.model";
 import { LimitBrandData } from "../payloads/responses/BrandData.model";
-import { AdminDashboardData, BrandDashboardData } from "../payloads/responses/DashboarData.model";
+import {
+  AdminDashboardData,
+  AdminPaymentDasboardData,
+  AdminPlayFieldDashboardData,
+  AdminRevenueDashboardData,
+  AdminUserDashboardData,
+  BrandDashboardData,
+} from "../payloads/responses/DashboarData.model";
 import { PlanData } from "../payloads/responses/PlanResponse.model";
 import { SubscriptionData } from "../payloads/responses/SubscriptionData.model";
 import { UserData } from "../payloads/responses/UserData.model";
@@ -27,11 +35,19 @@ export const getInitialUserForm = (): UserForm => ({
     errorMessage: "",
   },
   gender: {
-    value: "Nam",
+    value: 0,
     errorMessage: "",
   },
-  isActive: {
+  isDeleted: {
     value: 0,
+    errorMessage: "",
+  },
+  userId: {
+    value: 0,
+    errorMessage: "",
+  },
+  description: {
+    value: "",
     errorMessage: "",
   },
 });
@@ -70,13 +86,37 @@ export const getInitialPasswordForm = (): PasswordForm => ({
 
 export const getInitialAdminDashboardData = (): AdminDashboardData => ({
   numberOfUsers: 0,
-  numberOfBrands: 0,
   totalRevenue: "0",
   listRevenue: [],
-  listBrandCounts: [],
-  latestUsers: [],
-  recentTransactions: [],
+  monthlyRevenue: 1,
+  year: 0,
 });
+
+export const getInitialAdminRevenueDashboardData = (): AdminRevenueDashboardData => ({
+  year: 0,
+  monthlyRevenues: [{ month: 0, revenue: 0 }],
+  totalRevenue: 0,
+});
+
+export const getInitialAdminUserDashboardData = (): AdminUserDashboardData => ({
+  totalUsers: 0,
+  monthlyStatistics: [{ month: 0, userCount: 0 }],
+});
+
+export const getInitialAdminPlayFieldDashboardData = (): AdminPlayFieldDashboardData => ({
+  totalPlayField: 0,
+  totalBooking: 0,
+  fieldPercentages: [{ fieldTypeName: "", percentage: 0 }],
+});
+
+export const getInitialAdminPaymentDashboardData = (): AdminPaymentDasboardData => [
+  {
+    email: "",
+    dateOfTransaction: new Date("2024-10-02"),
+    status: 0,
+    totalAmount: 0,
+  },
+];
 
 export const getInitialBrandDashboardData = (): BrandDashboardData => ({
   store: 0,

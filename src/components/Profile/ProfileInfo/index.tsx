@@ -1,39 +1,21 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Image,
-  Input,
-  Radio,
-  RadioGroup,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Divider, Flex, Image, Input, Radio, RadioGroup, Text } from "@chakra-ui/react";
 import { useTranslation } from "react-i18next";
 import style from "./ProfileInfo.module.scss";
 import { themeColors } from "../../../constants/GlobalStyles";
 import { UserData } from "../../../payloads/responses/UserData.model";
 import { useEffect, useState } from "react";
 import { UserForm } from "../../../models/UserForm.model";
-import {
-  getInitialBrandForm,
-  getInitialUserForm,
-} from "../../../utils/initialData";
+import { getInitialBrandForm, getInitialUserForm } from "../../../utils/initialData";
 import { formatDate, getGender } from "../../../utils/functionHelper";
 import { UserRole } from "../../../constants/Enum";
-import {
-  isImageFile,
-  validateBrandForm,
-  validateUserForm,
-} from "../../../utils/validation";
-import {
-  brandUpdate,
-  userUpdate,
-} from "../../../payloads/requests/updateRequests.model";
+import { isImageFile, validateBrandForm, validateUserForm } from "../../../utils/validation";
+import { brandUpdate, userUpdate } from "../../../payloads/requests/updateRequests.model";
 import { updateUser } from "../../../services/UserService";
 import { toast } from "react-toastify";
 import { BrandForm } from "../../../models/BrandForm.model";
 import { updateBrand } from "../../../services/BrandService";
 import { BrandData } from "../../../payloads/responses/BrandData.model";
+import { error } from "console";
 
 interface ProfileInfoProps {
   userData: UserData | null;
@@ -49,14 +31,16 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userData, brandData }) => {
   const [isBrandChanged, setIsBrandChanged] = useState(false);
 
   const updateUserFormFromData = (userData: UserData) => {
-    const { fullname, userName, phone, dob, gender, isActive } = userData;
+    const { fullName, userName, phone, birtday, gender, isDeleted } = userData;
     const updatedUserForm: UserForm = {
-      fullName: { value: fullname, errorMessage: "" },
+      fullName: { value: fullName, errorMessage: "" },
       userName: { value: userName, errorMessage: "" },
       phoneNumber: { value: phone, errorMessage: "" },
-      DOB: { value: new Date(dob), errorMessage: "" },
-      gender: { value: getGender(gender), errorMessage: "" },
-      isActive: { value: isActive ? 1 : 0, errorMessage: "" },
+      DOB: { value: new Date(birtday), errorMessage: "" },
+      gender: { value: gender, errorMessage: "" },
+      isDeleted: { value: isDeleted ? 1 : 0, errorMessage: "" },
+      userId: { value: 0, errorMessage: "" },
+      description: { value: "", errorMessage: "" },
     };
     setUserForm(updatedUserForm);
   };
@@ -183,13 +167,13 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userData, brandData }) => {
       },
       DOB: { ...userForm.DOB, errorMessage: userErrors.DOB },
       gender: { ...userForm.gender, errorMessage: "" },
-      isActive: { ...userForm.isActive, errorMessage: "" },
+      isDeleted: { ...userForm.isDeleted, errorMessage: "" },
+      userId: { ...userForm.userId, errorMessage: "" },
+      description: { ...userForm.description, errorMessage: "" },
     };
 
     setUserForm(updatedUserForm);
-    const hasUserError = Object.values(userErrors).some(
-      (error) => error !== "",
-    );
+    const hasUserError = Object.values(userErrors).some((error) => error !== "");
 
     const brandErrors = validateBrandForm(brandForm);
     const updatedBrandForm = {
@@ -202,25 +186,22 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userData, brandData }) => {
     };
 
     setBrandForm(updatedBrandForm);
-    const hasBrandError = Object.values(brandErrors).some(
-      (error) => error !== "",
-    );
+    const hasBrandError = Object.values(brandErrors).some((error) => error !== "");
 
     const hasError = hasUserError || hasBrandError;
     if (!hasError) {
       let userResult, brandResult;
       if (isUserChanged) {
         const userUpdate: userUpdate = {
-          fullname: userForm.fullName.value,
-          dob: userForm.DOB.value
-            ? userForm.DOB.value.toISOString().split("T")[0]
-            : "",
+          fullName: userForm.fullName.value,
+          birthday: userForm.DOB.value ? userForm.DOB.value.toISOString().split("T")[0] : "",
           gender: userForm.gender.value,
-          phone: userForm.phoneNumber.value,
-          isActive: Number(userForm.isActive.value) === 1,
-          updateBy: Number(localStorage.getItem("UserId")),
+          phoneNumber: userForm.phoneNumber.value,
+          isDeleted: userForm.isDeleted.value,
+          userId: userForm.userId.value,
+          description: userForm.description.value,
         };
-        userResult = await updateUser(userData?.userId!, userUpdate);
+        userResult = await updateUser(1, userUpdate);
       }
 
       if (isBrandChanged) {
@@ -258,17 +239,10 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userData, brandData }) => {
 
   return (
     <Flex className={style.tab_panels_container}>
-      <Text className={style.tab_panels_container_title}>
-        {t("profile information title")}
-      </Text>
+      <Text className={style.tab_panels_container_title}>{t("profile information title")}</Text>
       <Divider marginY="1rem" />
       <Flex className={style.tab_panels_container_content}>
-        <Flex
-          flexDirection="column"
-          width="48%"
-          alignItems="center"
-          justifyContent="center"
-        >
+        <Flex flexDirection="column" width="48%" alignItems="center" justifyContent="center">
           {brandForm.imageUrl!.value && (
             <Image
               src={brandForm.imageUrl!.value}
@@ -280,11 +254,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userData, brandData }) => {
             />
           )}
           {!brandForm.imageUrl!.value ? (
-            <Input
-              type="file"
-              border="none"
-              onChange={(e) => handleLogoChange(e)}
-            />
+            <Input type="file" border="none" onChange={(e) => handleLogoChange(e)} />
           ) : (
             <Button onClick={handleRemoveImage} ml={3}>
               Xoá
@@ -328,11 +298,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userData, brandData }) => {
         )}
         <Flex flexDirection="column" width="48%">
           <Text className={style.text_title_content}>{t("Giới tính")}</Text>
-          <RadioGroup
-            value={userForm.gender.value}
-            paddingTop="8px"
-            onChange={(value) => handleInputChange("gender", value)}
-          >
+          <RadioGroup paddingTop="8px" onChange={(value) => handleInputChange("gender", value)}>
             <Flex direction="row" columnGap="1rem">
               <Radio value="Nam">{t("Nam")}</Radio>
               <Radio value="Nữ">{t("Nữ")}</Radio>
@@ -352,9 +318,7 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userData, brandData }) => {
         {renderInputField(
           false,
           t("birthday"),
-          userForm.DOB.value
-            ? userForm.DOB.value.toISOString().split("T")[0]
-            : "",
+          userForm.DOB.value ? userForm.DOB.value.toISOString().split("T")[0] : "",
           userForm.DOB.errorMessage,
           (e) => handleDateChange("DOB", e.target.value),
           "date",
@@ -372,25 +336,10 @@ const ProfileInfo: React.FC<ProfileInfoProps> = ({ userData, brandData }) => {
           "text",
           true,
         )}
-        {renderInputField(
-          false,
-          t("Vai trò"),
-          userData?.roleId === UserRole.BrandManager
-            ? "Quản lý thương hiệu"
-            : "N/A",
-          "",
-          () => {},
-          "text",
-          true,
-        )}
       </Flex>
 
       <Flex columnGap="5px" className={style.btn_container}>
-        <Button
-          isDisabled={!isChanged}
-          className={style.btn_content}
-          onClick={handleUpdate}
-        >
+        <Button isDisabled={!isChanged} className={style.btn_content} onClick={handleUpdate}>
           {t("update profile")}
         </Button>
         <Button isDisabled={!isChanged} onClick={handleReset}>

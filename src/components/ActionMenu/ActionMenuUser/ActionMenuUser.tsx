@@ -34,28 +34,26 @@ const ActionMenuUser: FC<ActionMenuProps> = ({ id, onEdit, onDelete }) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef: React.LegacyRef<HTMLButtonElement> = React.useRef(null);
-  const {
-    isOpen: isOpenUser,
-    onOpen: onOpenUser,
-    onClose: onCloseUser,
-  } = useDisclosure();
+  const { isOpen: isOpenUser, onOpen: onOpenUser, onClose: onCloseUser } = useDisclosure();
   // USER DATA
   const [userForm, setUserForm] = useState<UserForm>(getInitialUserForm());
 
   const handleEditClick = async () => {
-    var result = await getUser(id);
+    const result = await getUser(id);
 
     if (result.statusCode === 200) {
-      
-      const { fullname, userName, phone, dob, gender, isActive } = result.data;
+      const { userId, fullName, userName, phone, birtday, description, gender, isDeleted } =
+        result.data;
 
       const updatedUserData: UserForm = {
-        fullName: { value: fullname, errorMessage: "" },
+        userId: { value: userId, errorMessage: "" },
+        fullName: { value: fullName, errorMessage: "" },
         userName: { value: userName, errorMessage: "" },
         phoneNumber: { value: phone, errorMessage: "" },
-        DOB: { value: new Date(dob), errorMessage: "" },
-        gender: { value: getGender(gender), errorMessage: "" },
-        isActive: { value: isActive ? 1 : 0, errorMessage: "" },
+        DOB: { value: new Date(birtday), errorMessage: "" },
+        gender: { value: gender, errorMessage: "" },
+        isDeleted: { value: isDeleted, errorMessage: "" },
+        description: { value: description, errorMessage: "" },
       };
       setUserForm(updatedUserData);
       onOpenUser();
@@ -63,13 +61,14 @@ const ActionMenuUser: FC<ActionMenuProps> = ({ id, onEdit, onDelete }) => {
   };
 
   const updateUserData = (user: UserForm, isSave: boolean) => {
-    var userUpdate: userUpdate = {
-      fullname: user.fullName.value,
-      dob: user.DOB.value ? user.DOB.value.toISOString().split("T")[0] : "",
+    const userUpdate: userUpdate = {
+      userId: userForm.userId.value,
+      fullName: user.fullName.value,
+      birthday: user.DOB.value ? user.DOB.value.toISOString().split("T")[0] : "",
       gender: user.gender.value,
-      phone: user.phoneNumber.value,
-      isActive: Number(user.isActive.value) == 1 ? true : false,
-      updateBy: Number(localStorage.getItem("UserId")),
+      phoneNumber: user.phoneNumber.value,
+      isDeleted: user.isDeleted?.value,
+      description: user.description?.value,
     };
     onCloseUser();
     if (isSave) {
@@ -92,11 +91,11 @@ const ActionMenuUser: FC<ActionMenuProps> = ({ id, onEdit, onDelete }) => {
             <PopoverArrow />
             <PopoverBody>
               <Flex className={style.PopupButton} onClick={handleEditClick}>
-                <Text className={style.PopupButtonText}>Cập nhật người dùng</Text>
+                <Text className={style.PopupButtonText}>Update User</Text>
               </Flex>
               <Divider />
               <Flex className={style.PopupButton} onClick={onOpen}>
-                <Text className={style.PopupButtonText}>Xoá người dùng</Text>
+                <Text className={style.PopupButtonText}>Delete User</Text>
               </Flex>
             </PopoverBody>
           </PopoverContent>
@@ -108,9 +107,9 @@ const ActionMenuUser: FC<ActionMenuProps> = ({ id, onEdit, onDelete }) => {
         isOpen={isOpen}
         id={id}
         onDelete={onDelete}
-        titleHeader="Xoá người dùng"
-        titleBody="Bạn có chắc không? Bạn không thể hoàn tác hành động này sau đó."
-        btnName="Xoá"
+        titleHeader="Delete User"
+        titleBody="Are you sure? You can not undo this activity."
+        btnName="Delete"
       />
 
       <ModalForm
@@ -125,7 +124,7 @@ const ActionMenuUser: FC<ActionMenuProps> = ({ id, onEdit, onDelete }) => {
         isEdit={true}
         onClose={onCloseUser}
         isOpen={isOpenUser}
-        title={t("Cập nhật người dùng")}
+        title={t("Update User Information")}
       />
     </>
   );

@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import style from "./Sidebar.module.scss";
 import React, { useState, useEffect } from "react";
-import { CgAddR } from "react-icons/cg";
 import { MdLogout } from "react-icons/md";
 import { IoIosArrowForward } from "react-icons/io";
 import { Link as ReactRouterLink, useLocation, useNavigate } from "react-router-dom";
@@ -132,7 +131,7 @@ function Sidebar() {
     if (Array.isArray(menuItem.permissionRole)) {
       return menuItem.permissionRole.toString().includes(roleId);
     }
-    return menuItem.permissionRole.toString() === roleId;
+    return menuItem.permissionRole === roleId;
   });
 
   const currentPathPart = getMenuPartFromPathname(location.pathname);
@@ -166,7 +165,7 @@ function Sidebar() {
                 !menuItem.isDisabled
                   ? menuItem.to
                     ? () => changeItem(menuItem.label)
-                    : menuItem.onclick
+                    : () => changeItem("")
                   : undefined
               }
               backgroundColor={

@@ -1,4 +1,8 @@
 export interface UserForm {
+  userId: {
+    value: number;
+    errorMessage: string;
+  };
   fullName: {
     value: string;
     errorMessage: string;
@@ -16,11 +20,15 @@ export interface UserForm {
     errorMessage: string;
   };
   gender: {
+    value: number | null;
+    errorMessage: string;
+  };
+  description: {
     value: string;
     errorMessage: string;
   };
-  isActive: {
-    value: number | null;
+  isDeleted: {
+    value: number;
     errorMessage: string;
   };
 }

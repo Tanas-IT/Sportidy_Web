@@ -262,16 +262,17 @@ const PaymentInfoPage = () => {
 
       // Chuẩn bị dữ liệu cập nhật cho user
       var userUpdate: userUpdate = {
-        fullname: userForm.fullName.value,
-        dob: userForm.DOB.value ? userForm.DOB.value.toISOString().split("T")[0] : "",
+        fullName: userForm.fullName.value,
+        birthday: userForm.DOB.value ? userForm.DOB.value.toISOString().split("T")[0] : "",
         gender: userForm.gender.value,
-        phone: userForm.phoneNumber.value,
-        isActive: false,
-        updateBy: 0,
+        phoneNumber: userForm.phoneNumber.value,
+        isDeleted: 1,
+        description: "",
+        userId: 1,
       };
 
       // Gọi API cập nhật thông tin user
-      var userResult = await updateUser(userId, null, userUpdate);
+      var userResult = await updateUser(userId, userUpdate);
 
       // Kiểm tra kết quả cập nhật user
       if (userResult.statusCode !== 200) {
@@ -306,10 +307,10 @@ const PaymentInfoPage = () => {
       },
       DOB: { ...userForm.DOB, errorMessage: userErrors.DOB },
       gender: { ...userForm.gender, errorMessage: "" },
-      isActive: { ...userForm.isActive, errorMessage: "" },
+      isActive: { ...userForm.isDeleted, errorMessage: "" },
     };
 
-    setUserForm(updatedUserForm);
+    //setUserForm(updatedUserForm);
     const hasUserError = Object.values(userErrors).some((error) => error !== "");
 
     const brandErrors = validateBrandForm(brandForm);

@@ -1,10 +1,11 @@
 export interface userUpdate {
-  fullname: string;
-  dob: string;
-  gender: string;
-  phone: string;
-  isActive: boolean;
-  updateBy: number;
+  userId: number;
+  description: string;
+  fullName: string;
+  birthday: string;
+  gender: number | null;
+  phoneNumber: string;
+  isDeleted: number | null;
 }
 
 export interface brandUpdate {
