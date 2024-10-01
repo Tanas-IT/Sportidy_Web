@@ -41,7 +41,7 @@ function Header() {
   const translatedPathname = translatedPathParts.join(" / ").toUpperCase();
 
   const logoUrl = localStorage.getItem("BrandLogo");
-  const decodedAccessToken: JwtPayload = jwtDecode(localStorage.getItem("AccessToken") || "");
+  const decodedAccessToken = jwtDecode(localStorage.getItem("AccessToken") || "");
 
   const getInitialLanguage = () => {
     const savedLanguage = localStorage.getItem("language");
