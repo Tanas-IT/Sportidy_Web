@@ -2,30 +2,29 @@ import axiosAuth from "../api/axiosAuth";
 import axiosMultipartForm from "../api/axiosMultipartForm";
 import { ApiResponse } from "../payloads/responses/ApiResponse.model";
 import { GetData } from "../payloads/responses/GetData.model";
+import { PlayFieldData } from "../payloads/responses/PlayFieldData.model";
 import { ProductData } from "../payloads/responses/ProductData.model";
 import axios from "axios";
 
-export const getProducts = async (
-  brandId: number,
+export const getPlayFields = async (
   currentPage: number,
   rowsPerPage: number,
-  searchValue: string
-): Promise<GetData<ProductData>> => {
-  const res = await axiosAuth.get("products", {
+  searchValue: string,
+): Promise<GetData<PlayFieldData>> => {
+  const res = await axiosAuth.get("Playfields", {
     params: {
-      brandId: brandId,
       pageNumber: currentPage,
       pageSize: rowsPerPage,
       searchKey: searchValue,
     },
   });
   const apiResponse = res.data as ApiResponse<Object>;
-  return apiResponse.data as GetData<ProductData>;
+  return apiResponse.data as GetData<PlayFieldData>;
 };
 
 export const getProductsByCategory = async (
   brandId: number,
-  categoryId: number
+  categoryId: number,
 ): Promise<GetData<ProductData>> => {
   const res = await axiosAuth.get("products/get-by-category", {
     params: {
@@ -37,9 +36,7 @@ export const getProductsByCategory = async (
   return apiResponse.data as GetData<ProductData>;
 };
 
-export const getProduct = async (
-  id: number
-): Promise<ApiResponse<ProductData>> => {
+export const getProduct = async (id: number): Promise<ApiResponse<ProductData>> => {
   const res = await axiosAuth.get("products/get-by-id", {
     params: {
       id: id,
@@ -49,9 +46,7 @@ export const getProduct = async (
   return apiResponse;
 };
 
-export const createProduct = async (
-  productForm: FormData
-): Promise<ApiResponse<Object>> => {
+export const createProduct = async (productForm: FormData): Promise<ApiResponse<Object>> => {
   try {
     const res = await axiosMultipartForm.post("products", productForm);
     const apiResponse = res.data as ApiResponse<Object>;
@@ -64,15 +59,12 @@ export const createProduct = async (
   }
 };
 
-export const updateProduct = async (
+export const updatePlayfield = async (
   id: number,
-  product: FormData
+  playfield: FormData,
 ): Promise<ApiResponse<Object>> => {
   try {
-    const res = await axiosMultipartForm.put(
-      `products?product-id=${id}`,
-      product
-    );
+    const res = await axiosMultipartForm.put(`Playfields?playfieldId=${id}`, playfield);
     const apiResponse = res.data as ApiResponse<Object>;
     return apiResponse;
   } catch (error) {
@@ -83,10 +75,8 @@ export const updateProduct = async (
   }
 };
 
-export const deleteProduct = async (
-  id: number
-): Promise<ApiResponse<Object>> => {
-  const res = await axiosAuth.delete("products", {
+export const deletePlayfield = async (id: number): Promise<ApiResponse<Object>> => {
+  const res = await axiosAuth.delete("Playfields", {
     params: {
       id: id,
     },

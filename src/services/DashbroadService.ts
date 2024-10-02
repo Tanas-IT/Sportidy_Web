@@ -7,6 +7,7 @@ import {
   AdminRevenueDashboardData,
   AdminUserDashboardData,
   BrandDashboardData,
+  FeedbackDashBoard,
 } from "../payloads/responses/DashboarData.model";
 
 export const getDashboardAdmin = async (year: number): Promise<AdminRevenueDashboardData> => {
@@ -52,4 +53,9 @@ export const getDashboardBrand = async (
     }
     throw new Error("Unexpected error");
   }
+};
+export const getFeedbackDashboard = async (): Promise<ApiResponse<FeedbackDashBoard>> => {
+  const res = await axiosAuth.get(`system-feedback/dashboard`);
+  const apiResponse = res.data as ApiResponse<FeedbackDashBoard>;
+  return apiResponse;
 };

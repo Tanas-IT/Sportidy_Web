@@ -104,11 +104,11 @@ function LandingPage() {
               <img src={landingImage1} alt="Dịch vụ Smart Menu" className={style.imgBgWhite} />
             </Box>
             <Box textAlign="left" marginLeft="6rem" marginBottom="5rem">
-              <Heading className={style.title}>What is SPORTIDY</Heading>
+              <Heading className={style.title}>What is SPORTYDI</Heading>
               <Text fontSize="xl" color="gray.600" lineHeight="tall" width="80%">
-                - SPORTIDI is the ultimate platform for sports fans to connect, collaborate, and
+                - SPORTYDI is the ultimate platform for sports fans to connect, collaborate, and
                 celebrate their passion for athletics. Whether you're looking to find a pickup game,
-                organize a watch party, or just chat with fellow enthusiasts. SPORTIDI makes it easy
+                organize a watch party, or just chat with fellow enthusiasts. SPORTYDI makes it easy
                 to build your sports tribe.
               </Text>
             </Box>

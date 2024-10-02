@@ -57,19 +57,9 @@ function Category() {
 
         const loadData = async () => {
           if (searchValue) {
-            result = await getCategories(
-              Number(brandId),
-              currentPage,
-              rowsPerPage,
-              searchValue
-            );
+            result = await getCategories(Number(brandId), currentPage, rowsPerPage, searchValue);
           } else {
-            result = await getCategories(
-              Number(brandId),
-              currentPage,
-              rowsPerPage,
-              ""
-            );
+            result = await getCategories(Number(brandId), currentPage, rowsPerPage, "");
           }
           setData(result.list);
           setTotalPages(result.totalPage);
@@ -89,7 +79,7 @@ function Category() {
         setIsLoading(false);
       }
     },
-    [currentPage, rowsPerPage, isInitialLoad]
+    [currentPage, rowsPerPage, isInitialLoad],
   );
 
   useEffect(() => {
@@ -100,7 +90,7 @@ function Category() {
     (page: number) => {
       setCurrentPage(page);
     },
-    [setCurrentPage]
+    [setCurrentPage],
   );
 
   const handleRowsPerPageChange = useCallback(
@@ -108,7 +98,7 @@ function Category() {
       setCurrentPage(1);
       setRowsPerPage(newRowsPerPage);
     },
-    [setCurrentPage, setRowsPerPage]
+    [setCurrentPage, setRowsPerPage],
   );
 
   async function handleCreate(id: number, categoryName: string) {
@@ -150,7 +140,7 @@ function Category() {
     cateId: number,
     brandId: number,
     categoryName: string,
-    onClose: () => void
+    onClose: () => void,
   ) {
     try {
       var result = await updateCategory(cateId, brandId, categoryName);

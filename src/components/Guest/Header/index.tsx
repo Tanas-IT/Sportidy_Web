@@ -47,7 +47,7 @@ const Header: React.FC = () => {
             <Image src={logo} alt="Logo" w="100%" h="auto" />
           </Box>
           <Heading sx={{ marginBottom: "20px" }} size="lg" color={themeColors.primaryButton}>
-            SPORTIDI
+            SPORTYDI
           </Heading>
         </Flex>
 

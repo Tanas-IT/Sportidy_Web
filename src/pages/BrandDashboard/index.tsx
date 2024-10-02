@@ -1,27 +1,38 @@
-import { Box, Card, CardBody, Flex, Heading, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, Card, CardBody, Flex, Heading, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import style from "./BrandDashboard.module.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import CardStats from "../../components/Dashboard/CardStats";
+import CardStats, { StatCardFeedback } from "../../components/Dashboard/CardStats";
 import { themeColors } from "../../constants/GlobalStyles";
-import { IoGitBranchOutline } from "react-icons/io5";
-import { MdListAlt } from "react-icons/md";
-import { AiOutlineProduct } from "react-icons/ai";
-import { Bar, Line } from "react-chartjs-2";
-import { TooltipItem } from "chart.js";
-import { BrandDashboardData } from "../../payloads/responses/DashboarData.model";
-import { getInitialBrandDashboardData } from "../../utils/initialData";
-import { getDashboardBrand } from "../../services/DashbroadService";
-import LineChart from "../../components/Dashboard/LineChart";
-import BarChart from "../../components/Dashboard/BarChart";
+import { VscFeedback } from "react-icons/vsc";
+import { MdImage } from "react-icons/md";
+import { MdOutlineStarPurple500 } from "react-icons/md";
+import {
+  AdminFeedbackDashboardData,
+  FeedbackDashBoard,
+} from "../../payloads/responses/DashboarData.model";
+import { getInitialFeedbackDashboardData, getInitialFeedbackData } from "../../utils/initialData";
+import { getFeedbackDashboard } from "../../services/DashbroadService";
+import { getAllFeedback } from "../../services/CategoryService";
+import { getOptions } from "../../utils/functionHelper";
+import NavigationDot from "../../components/NavigationDot/NavigationDot";
+import { textAlign } from "html2canvas-pro/dist/types/css/property-descriptors/text-align";
 
-function BrandDashboard() {
+function FeedbackDashboard() {
   const location = useLocation();
   const navigate = useNavigate();
   const flag = useRef(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [data, setData] = useState<BrandDashboardData>(getInitialBrandDashboardData());
+  const [data, setData] = useState<FeedbackDashBoard>(getInitialFeedbackDashboardData());
+  const [feedbackData, setFeedbackData] = useState<AdminFeedbackDashboardData>(
+    getInitialFeedbackData(),
+  );
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(5);
+  const [rowsPerPageOption, setRowsPerPageOption] = useState<number[]>([5]);
+  const [totalPages, setTotalPages] = useState<number>(10);
+  const [totalRecords, setTotalRecords] = useState<number>(0);
 
   useEffect(() => {
     if (location.state?.toastMessage && !flag.current) {
@@ -38,9 +49,12 @@ function BrandDashboard() {
       setIsLoading(true);
 
       const loadData = async () => {
-        const { statusCode, data } = await getDashboardBrand(
-          Number(localStorage.getItem("BrandId")),
-        );
+        const { statusCode, data } = await getFeedbackDashboard();
+        const result = await getAllFeedback(currentPage, rowsPerPage, "");
+        setFeedbackData(result.list);
+        setTotalPages(result.totalPage);
+        setTotalRecords(result.totalRecord);
+        setRowsPerPageOption(getOptions(result.totalRecord));
         if (statusCode === 200) {
           setData(data);
           setIsLoading(false);
@@ -65,108 +79,86 @@ function BrandDashboard() {
 
   const stats = [
     {
-      icon: IoGitBranchOutline,
-      label: "Chi nhánh",
-      value: data.store,
+      icon: VscFeedback,
+      label: "Feedbacks",
+      value: data.totalFeedback,
       bgColor: themeColors.userStatColor,
     },
     {
-      icon: MdListAlt,
-      label: "Thực đơn",
-      value: data.menus,
+      icon: MdImage,
+      label: "Images",
+      value: data.totalImage,
       bgColor: themeColors.revenueDarkenColor,
     },
     {
-      icon: AiOutlineProduct,
-      label: "Sản phẩm",
-      value: data.product,
-      bgColor: themeColors.tradeMarkDarkenColor,
+      icon: MdOutlineStarPurple500,
+      label: "Ratings",
+      value: data.totalRating,
+      bgColor: "#f3e011",
     },
   ];
 
-  const maxMenuNameLength = 4;
-
-  const truncatedMenuAppearanceData = data.timesRecomments.map((menu) => ({
-    ...menu,
-    displayName:
-      menu.description && menu.description.length > maxMenuNameLength
-        ? menu.description.substring(0, maxMenuNameLength) + "..."
-        : menu.description || "",
-  }));
-
-  const barChartMenuData = {
-    labels: truncatedMenuAppearanceData.map((data) => data.displayName),
-    datasets: [
-      {
-        label: "Số lần menu xuất hiện",
-        data: truncatedMenuAppearanceData.map((data) => data.times),
-        backgroundColor: themeColors.revenueLightenColor,
-        borderColor: "rgba(75, 192, 192, 1)",
-      },
-    ],
-  };
-
-  const lineChartOptions = {
-    scales: {
-      x: {
-        title: {
-          display: true,
-          text: "Di chuột để xem tên",
-        },
-      },
-      y: {
-        beginAtZero: true,
-      },
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
     },
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: function (tooltipItem: TooltipItem<"line">) {
-            return data.timesRecomments[tooltipItem.dataIndex].description || "";
-          },
-        },
-      },
-    },
-  };
+    [setCurrentPage],
+  );
 
-  const barChartProductData = {
-    labels: data.productsByCate.map((data) => data.cateName),
-    datasets: [
-      {
-        label: "Sản phẩm theo danh mục",
-        data: data.productsByCate.map((data) => data.numberOfProduct),
-        backgroundColor: themeColors.tradeMarkLightenColor,
-        borderColor: "rgba(153, 102, 255, 1)",
-      },
-    ],
-  };
-
-  const barChartProductOptions = {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
+  const handleRowsPerPageChange = useCallback(
+    (newRowsPerPage: number) => {
+      setCurrentPage(1);
+      setRowsPerPage(newRowsPerPage);
     },
-  };
+    [setCurrentPage, setRowsPerPage],
+  );
+
+  if (isLoading) {
+    return (
+      <Flex
+        position="fixed"
+        top="0"
+        left="0"
+        height="100vh"
+        width="100%"
+        justifyContent="center"
+        alignItems="center"
+        bg="rgba(0, 0, 0, 0.2)"
+        zIndex="9999"
+      >
+        <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="green.500" size="xl" />
+      </Flex>
+    );
+  }
 
   return (
     <Box className={style.container_dashboard}>
       <CardStats stats={stats} />
+      <SimpleGrid columns={{ sm: 1, md: 1 }} spacing={4} mt={8}>
+        <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={4}>
+          {feedbackData.map((item, index) => (
+            <StatCardFeedback
+              key={index}
+              avatar={item.avatar}
+              content={item.content}
+              fullName={item.userFullName}
+              rating={item.rating}
+              feedbackDate={item.feedbackDate}
+              imageURL={item.imageUrl}
+            />
+          ))}
+        </SimpleGrid>
 
-      <SimpleGrid columns={{ sm: 1, md: 2 }} spacing={4} mt={8}>
-        <LineChart
-          title="Thống kê số lần xuất hiện của menu"
-          data={barChartMenuData}
-          options={lineChartOptions}
-        />
-        <BarChart
-          title="Thống kê sản phẩm theo danh mục"
-          data={barChartProductData}
-          options={barChartProductOptions}
+        <NavigationDot
+          totalPages={totalPages}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+          rowsPerPageOptions={rowsPerPageOption}
+          onRowsPerPageChange={handleRowsPerPageChange}
         />
       </SimpleGrid>
     </Box>
   );
 }
 
-export default BrandDashboard;
+export default FeedbackDashboard;

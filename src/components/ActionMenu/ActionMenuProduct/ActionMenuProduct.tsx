@@ -27,11 +27,7 @@ interface ActionMenuProps {
 const ActionMenuProduct: FC<ActionMenuProps> = ({ id, onDelete, onEdit }) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpenProduct,
-    onOpen: onOpenProduct,
-    onClose: onCloseProduct,
-  } = useDisclosure();
+  const { isOpen: isOpenProduct, onOpen: onOpenProduct, onClose: onCloseProduct } = useDisclosure();
   const cancelRef: React.LegacyRef<HTMLButtonElement> = React.useRef(null);
 
   return (
@@ -49,15 +45,12 @@ const ActionMenuProduct: FC<ActionMenuProps> = ({ id, onDelete, onEdit }) => {
             <PopoverArrow />
             <PopoverBody>
               <Divider />
-              <Flex
-                className={style.PopupButton}
-                onClick={() => onOpenProduct()}
-              >
-                <Text className={style.PopupButtonText}>Cập nhật sản phẩm</Text>
+              <Flex className={style.PopupButton} onClick={() => onOpenProduct()}>
+                <Text className={style.PopupButtonText}>Update PlayField</Text>
               </Flex>
               <Divider />
               <Flex className={style.PopupButton} onClick={onOpen}>
-                <Text className={style.PopupButtonText}>Xoá sản phẩm</Text>
+                <Text className={style.PopupButtonText}>Delete PlayField</Text>
               </Flex>
             </PopoverBody>
           </PopoverContent>
@@ -69,24 +62,19 @@ const ActionMenuProduct: FC<ActionMenuProps> = ({ id, onDelete, onEdit }) => {
         isOpen={isOpen}
         id={id}
         onDelete={onDelete}
-        titleHeader="Xoá sản phẩm"
-        titleBody="Bạn có chắc không? Bạn không thể hoàn tác hành động này sau đó."
-        btnName="Xoá"
+        titleHeader="Delete PlayField"
+        titleBody="Are you sure? You can not undo that action"
+        btnName="Delete"
       />
 
       <ModalForm
         formBody={
-          <ModalFormProduct
-            onClose={onCloseProduct}
-            handleEdit={onEdit}
-            isEdit={true}
-            id={id}
-          />
+          <ModalFormProduct onClose={onCloseProduct} handleEdit={onEdit} isEdit={true} id={id} />
         }
         isEdit={true}
         onClose={onCloseProduct}
         isOpen={isOpenProduct}
-        title={t("Cập nhật sản phẩm")}
+        title={t("Update PlayField")}
       />
     </>
   );

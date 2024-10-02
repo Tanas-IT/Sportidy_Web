@@ -8,7 +8,7 @@ const API_DEVELOPMENT = import.meta.env.VITE_API_DEVELOPMENT;
 const API_DEPLOY = import.meta.env.VITE_API_DEPLOY;
 
 const BASE_URL =
-  API_DEVELOPMENT === true ? `${API_DEPLOY}/sportidy` : `${API_HOST}:${API_PORT}/sportidy`;
+  API_DEVELOPMENT === "true" ? `${API_DEPLOY}/sportidy` : `${API_HOST}:${API_PORT}/sportidy`;
 
 const axiosLogin: AxiosInstance = axios.create({
   baseURL: BASE_URL,

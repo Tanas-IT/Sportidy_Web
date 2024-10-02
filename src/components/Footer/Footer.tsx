@@ -8,7 +8,7 @@ function Footer() {
     <Flex className={style.Footer}>
       <Flex>
         <Flex className={style.LeftFooter}>
-          <Text className={style.LogoText}>SPORTIDI </Text>
+          <Text className={style.LogoText}>SPORTYDI </Text>
 
           <Flex className={style.ContentOfLeftFooter}>
             <Flex className={style.LeftContentOfLeftFooter}>
