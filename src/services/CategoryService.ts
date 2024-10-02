@@ -3,6 +3,7 @@ import axiosAuth from "../api/axiosAuth";
 import { ApiResponse } from "../payloads/responses/ApiResponse.model";
 import { CategoryData } from "../payloads/responses/CategoryData.model";
 import { GetData } from "../payloads/responses/GetData.model";
+import { FeedbackData } from "../payloads/responses/FeedbackData.model";
 
 //cái này để bỏ vào selection lúc add product
 export interface CategoryDataSelection {
@@ -10,10 +11,8 @@ export interface CategoryDataSelection {
   categoryCode: string;
   categoryName: string;
 }
-export const getCategoryByBrandId = async (
-  Id: number
-): Promise<GetData<CategoryDataSelection>> => {
-  const res = await axiosAuth.get("categories/get-by-brand-id", {
+export const getPlayfields = async (Id: number): Promise<GetData<CategoryDataSelection>> => {
+  const res = await axiosAuth.get(`PlayFields/${Id}`, {
     params: {
       brandId: Id,
     },
@@ -27,7 +26,7 @@ export const getCategories = async (
   brandId: number,
   currentPage: number,
   rowsPerPage: number,
-  searchValue: string
+  searchValue: string,
 ): Promise<GetData<CategoryData>> => {
   const res = await axiosAuth.get("categories", {
     params: {
@@ -41,21 +40,17 @@ export const getCategories = async (
   return apiResponse.data as GetData<CategoryData>;
 };
 
-export const getCategoriesByBrandId = async (
-  Id: number
-): Promise<ApiResponse<CategoryData[]>> => {
+export const getCategoriesByBrandId = async (Id: number): Promise<ApiResponse<CategoryData[]>> => {
   const res = await axiosAuth.get("categories/get-by-brand-id", {
     params: {
       brandId: Id,
     },
   });
   const apiResponse = res.data as ApiResponse<CategoryData[]>;
-  return apiResponse
+  return apiResponse;
 };
 
-export const getCategory = async (
-  id: number
-): Promise<ApiResponse<CategoryData>> => {
+export const getCategory = async (id: number): Promise<ApiResponse<CategoryData>> => {
   const res = await axiosAuth.get("categories/get-by-id", {
     params: {
       id: id,
@@ -67,7 +62,7 @@ export const getCategory = async (
 
 export const createCategory = async (
   cateName: string,
-  brandId: number
+  brandId: number,
 ): Promise<ApiResponse<Object>> => {
   try {
     const res = await axiosAuth.post("categories", {
@@ -104,9 +99,7 @@ export const updateCategory = async (
   }
 };
 
-export const deleteCategory = async (
-  id: number
-): Promise<ApiResponse<Object>> => {
+export const deleteCategory = async (id: number): Promise<ApiResponse<Object>> => {
   const res = await axiosAuth.delete("categories", {
     params: {
       id: id,
@@ -114,4 +107,20 @@ export const deleteCategory = async (
   });
   const apiResponse = res.data as ApiResponse<Object>;
   return apiResponse;
+};
+
+export const getAllFeedback = async (
+  currentPage: number,
+  rowsPerPage: number,
+  searchValue: string,
+): Promise<GetData<FeedbackData>> => {
+  const res = await axiosAuth.get("system-feedback", {
+    params: {
+      pageNumber: currentPage,
+      pageSize: rowsPerPage,
+      searchKey: searchValue,
+    },
+  });
+  const apiResponse = res.data as ApiResponse<Object>;
+  return apiResponse.data as GetData<FeedbackData>;
 };

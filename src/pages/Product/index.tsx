@@ -19,9 +19,9 @@ import { useCallback, useEffect, useState } from "react";
 import { ProductData } from "../../payloads/responses/ProductData.model";
 import {
   createProduct,
-  deleteProduct,
-  getProducts,
-  updateProduct,
+  deletePlayfield,
+  getPlayFields,
+  updatePlayfield,
 } from "../../services/ProductService";
 import { toast } from "react-toastify";
 import moment from "moment";
@@ -33,21 +33,17 @@ import Searchbar from "../../components/Searchbar";
 import { useLocation, useNavigate } from "react-router-dom";
 import ActionMenuProduct from "../../components/ActionMenu/ActionMenuProduct/ActionMenuProduct";
 import { formatCurrency, getOptions } from "../../utils/functionHelper";
+import { PlayFieldData } from "../../payloads/responses/PlayFieldData.model";
 
 function Product() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [data, setData] = useState<ProductData[]>([]);
+  const [data, setData] = useState<PlayFieldData[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
   const [rowsPerPageOption, setRowsPerPageOption] = useState<number[]>([5]);
   const [totalPages, setTotalPages] = useState<number>(10);
   const [totalRecords, setTotalRecords] = useState<number>(0);
-  const brandId = localStorage.getItem("BrandId");
-  const {
-    isOpen: isOpenProduct,
-    onOpen: onOpenProduct,
-    onClose: onCloseProduct,
-  } = useDisclosure();
+  const { isOpen: isOpenProduct, onOpen: onOpenProduct, onClose: onCloseProduct } = useDisclosure();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -71,19 +67,9 @@ function Product() {
 
         const loadData = async () => {
           if (searchValue) {
-            result = await getProducts(
-              Number(brandId),
-              currentPage,
-              rowsPerPage,
-              searchValue
-            );
+            result = await getPlayFields(currentPage, rowsPerPage, searchValue);
           } else {
-            result = await getProducts(
-              Number(brandId),
-              currentPage,
-              rowsPerPage,
-              ""
-            );
+            result = await getPlayFields(currentPage, rowsPerPage, "");
           }
           setData(result.list);
           setTotalPages(result.totalPage);
@@ -98,7 +84,7 @@ function Product() {
         setIsLoading(false);
       }
     },
-    [currentPage, rowsPerPage]
+    [currentPage, rowsPerPage],
   );
 
   useEffect(() => {
@@ -109,7 +95,7 @@ function Product() {
     (page: number) => {
       setCurrentPage(page);
     },
-    [setCurrentPage]
+    [setCurrentPage],
   );
 
   const handleRowsPerPageChange = useCallback(
@@ -117,7 +103,7 @@ function Product() {
       setCurrentPage(1);
       setRowsPerPage(newRowsPerPage);
     },
-    [setCurrentPage, setRowsPerPage]
+    [setCurrentPage, setRowsPerPage],
   );
 
   async function handleCreate(productForm: FormData) {
@@ -141,31 +127,31 @@ function Product() {
 
   async function handleDelete(id: number) {
     try {
-      const result = await deleteProduct(id);
+      const result = await deletePlayfield(id);
       if (result.statusCode === 200) {
         if ((totalRecords - 1) % rowsPerPage === 0 && currentPage > 1) {
           setCurrentPage((prevPage) => prevPage - 1);
         } else {
           fetchData();
         }
-        toast.success("Xoá sản phẩm thành công");
+        toast.success("Delete Playfield Success");
       }
     } catch (e) {
-      toast.error("Xoá sản phẩm thất bại");
+      toast.error("Delete Playfield Failed");
     }
   }
 
-  async function handleEdit(id: number, productForm: FormData) {
+  async function handleEdit(id: number, plafieldForm: FormData) {
     try {
-      var result = await updateProduct(id, productForm);
+      const result = await updatePlayfield(id, plafieldForm);
       if (result.statusCode === 200) {
         fetchData();
-        toast.success("Cập nhật sản phẩm thành công");
+        toast.success("Update PlayField Success");
       } else {
         toast.error(result.message);
       }
     } catch {
-      toast.error("Cập nhật sản phẩm thất bại");
+      toast.error("Update PlayField Failed");
     }
   }
 
@@ -177,38 +163,29 @@ function Product() {
     <Flex className={style.container}>
       <Flex className={style.searchWrapper}>
         <Searchbar onSearch={handleSearch} />
-        <Button onClick={onOpenProduct} className={style.AddProductBtn}>
-          <Text as="span" fontSize="25px" me={3}>
-            <IoAddCircleOutline />
-          </Text>
-          Tạo sản phẩm
-        </Button>
         <ModalForm
           formBody={
-            <ModalFormProduct
-              onClose={onCloseProduct}
-              handleCreate={handleCreate}
-              isEdit={false}
-            />
+            <ModalFormProduct onClose={onCloseProduct} handleCreate={handleCreate} isEdit={false} />
           }
           onClose={onCloseProduct}
           isOpen={isOpenProduct}
-          title={"Tạo mới sản phẩm"}
+          title={"Edit PlayField"}
         />
       </Flex>
       <Flex className={style.Product}>
         <TableContainer className={style.ProductTbl}>
           <Table>
-            <TableCaption>Bảng quản lý sản phẩm</TableCaption>
+            <TableCaption>Table Of Manage PlayField</TableCaption>
             <Thead>
               <Tr>
                 <Th className={style.HeaderTbl}>Id</Th>
-                <Th className={style.HeaderTbl}>Tên sản phẩm</Th>
-                <Th className={style.HeaderTbl}>Hình ảnh</Th>
-                <Th className={style.HeaderTbl}>Loại</Th>
-                <Th className={style.HeaderTbl}>Giá</Th>
-                <Th className={style.HeaderTbl}>Mô tả</Th>
-                <Th className={style.HeaderTbl}>Ngày tạo</Th>
+                <Th className={style.HeaderTbl}>Playfield Name</Th>
+                <Th className={style.HeaderTbl}>Image</Th>
+                <Th className={style.HeaderTbl}>Type</Th>
+                <Th className={style.HeaderTbl}>Price</Th>
+                <Th className={style.HeaderTbl}>Open-Close Time</Th>
+                <Th className={style.HeaderTbl}>Playfield's Owner</Th>
+                <Th className={style.HeaderTbl}>Address</Th>
                 <Th className={style.HeaderTbl}>Cài đặt</Th>
               </Tr>
             </Thead>
@@ -221,27 +198,30 @@ function Product() {
                 </Tr>
               ) : data.length === 0 ? (
                 <Tr>
-                  <Td colSpan={10}>Không có sản phẩm để hiển thị</Td>
+                  <Td colSpan={10}>No Playfield to display</Td>
                 </Tr>
               ) : (
-                data.map((product, index) => (
-                  <Tr key={product.productCode} className={style.ProductItem}>
+                data.map((playfield, index) => (
+                  <Tr key={playfield.playFieldCode} className={style.ProductItem}>
                     <Td>{(currentPage - 1) * rowsPerPage + index + 1}</Td>
-                    <Td>{product.productName}</Td>
+                    <Td>{playfield.playFieldName}</Td>
                     <Td>
                       <img
-                        src={product.imageUrl}
-                        alt={product.productName}
+                        src={playfield.avatarImage}
+                        alt={playfield.playFieldName}
                         className={style.ProductImage}
                       />
                     </Td>
-                    <Td>{product.categoryName}</Td>
-                    <Td>{formatCurrency(product.price.toString())}</Td>
-                    <Td className={style.WrapText}>{product.description}</Td>
-                    <Td>{moment(product.createDate).format("DD/MM/YYYY")}</Td>
+                    <Td>{playfield.sportName}</Td>
+                    <Td>{formatCurrency(playfield.price.toString())}</Td>
+                    <Td>
+                      {playfield.openTime} - {playfield.closeTime}
+                    </Td>
+                    <Td className={style.WrapText}>{playfield.fullName}</Td>
+                    <Td>{playfield.address}</Td>
                     <Td>
                       <ActionMenuProduct
-                        id={product.productId}
+                        id={playfield.playFieldId}
                         onDelete={handleDelete}
                         onEdit={handleEdit}
                       />

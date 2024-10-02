@@ -1,3 +1,4 @@
+import { FeedbackData } from "./FeedbackData.model";
 import { UserData } from "./UserData.model";
 
 interface listRevenue {
@@ -61,6 +62,7 @@ export interface AdminPlayFieldDashboardData {
 }
 
 export interface AdminPaymentDasboardData extends Array<paymentData> {}
+export interface AdminFeedbackDashboardData extends Array<FeedbackData> {}
 // ----------------------------------------------------------------
 
 interface timesRecomments {
@@ -80,4 +82,11 @@ export interface BrandDashboardData {
   menus: number;
   timesRecomments: timesRecomments[];
   productsByCate: productsByCate[];
+}
+
+export interface FeedbackDashBoard {
+  totalFeedback: number;
+  totalImage: number;
+  totalVideo: number;
+  totalRating: number;
 }

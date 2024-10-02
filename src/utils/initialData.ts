@@ -7,15 +7,16 @@ import { UserForm } from "../models/UserForm.model";
 import { LimitBrandData } from "../payloads/responses/BrandData.model";
 import {
   AdminDashboardData,
+  AdminFeedbackDashboardData,
   AdminPaymentDasboardData,
   AdminPlayFieldDashboardData,
   AdminRevenueDashboardData,
   AdminUserDashboardData,
   BrandDashboardData,
+  FeedbackDashBoard,
 } from "../payloads/responses/DashboarData.model";
 import { PlanData } from "../payloads/responses/PlanResponse.model";
 import { SubscriptionData } from "../payloads/responses/SubscriptionData.model";
-import { UserData } from "../payloads/responses/UserData.model";
 
 export const getInitialUserForm = (): UserForm => ({
   fullName: {
@@ -125,6 +126,28 @@ export const getInitialBrandDashboardData = (): BrandDashboardData => ({
   timesRecomments: [],
   productsByCate: [],
 });
+
+export const getInitialFeedbackDashboardData = (): FeedbackDashBoard => ({
+  totalFeedback: 0,
+  totalImage: 0,
+  totalRating: 0,
+  totalVideo: 0,
+});
+
+export const getInitialFeedbackData = (): AdminFeedbackDashboardData => [
+  {
+    avatar: "",
+    content: "",
+    feedbackCode: "",
+    feedbackDate: "",
+    feedbackId: 0,
+    imageUrl: "",
+    isAnonymous: false,
+    rating: 0,
+    userFullName: "",
+    videoUrl: "",
+  },
+];
 
 export const getInitialPlanData = (): PlanData => ({
   planId: 0,
