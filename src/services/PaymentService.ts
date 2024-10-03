@@ -6,11 +6,11 @@ import { PaymentData } from "../payloads/responses/PaymentData.model";
 import { GetData } from "../payloads/responses/GetData.model";
 
 export const getPayments = async (
-  currentPage: number,
-  rowsPerPage: number,
-  searchValue: string,
+  currentPage: number | undefined,
+  rowsPerPage: number | undefined,
+  searchValue: string | undefined,
 ): Promise<GetData<PaymentData>> => {
-  const res = await axiosAuth.get("payments", {
+  const res = await axiosAuth.get("bookings", {
     params: {
       pageNumber: currentPage,
       pageSize: rowsPerPage,

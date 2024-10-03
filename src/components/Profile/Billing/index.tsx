@@ -96,23 +96,17 @@ const Billing: React.FC<BillingProps> = ({ subscription }) => {
                 <Flex key={index} className={style.payment_history_item}>
                   <Flex flexDirection="column" width="50%">
                     <Text className={style.payment_history_item_label}>{t("Tên gói")}</Text>
-                    <Text className={style.payment_history_item_value}>{payment.planName}</Text>
                   </Flex>
                   <Flex flexDirection="column" width="50%">
                     <Text className={style.payment_history_item_label}>{t("Ngày giao dịch")}</Text>
-                    <Text className={style.payment_history_item_value}>
-                      {formatDateAndTime(payment.paymentDate)}
-                    </Text>
+                    <Text className={style.payment_history_item_value}></Text>
                   </Flex>
                   <Flex flexDirection="column" width="50%">
                     <Text className={style.payment_history_item_label}>{t("Số tiền")}</Text>
-                    <Text className={style.payment_history_item_value}>
-                      {formatCurrencyVND(payment.amount.toString())}
-                    </Text>
+                    <Text className={style.payment_history_item_value}></Text>
                   </Flex>
                   <Flex flexDirection="column" width="50%">
                     <Text className={style.payment_history_item_label}>{t("Ghi chú")}</Text>
-                    <Text className={style.payment_history_item_value}>{payment.planName}</Text>
                   </Flex>
                 </Flex>
               ))

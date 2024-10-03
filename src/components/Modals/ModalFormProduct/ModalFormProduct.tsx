@@ -6,29 +6,24 @@ import {
   Input,
   ModalBody,
   ModalFooter,
+  Spinner,
   Text,
   Textarea,
 } from "@chakra-ui/react";
 import style from "./ModalFormProduct.module.scss";
-import Select from "react-select";
 import { toast } from "react-toastify";
-import { ProductForm } from "../../../models/ProductForm.model";
-import { isImageFile, validateProductForm } from "../../../utils/validation";
-import { getProduct } from "../../../services/ProductService";
-import { getInitialProductForm } from "../../../utils/initialData";
+import { validateProductForm } from "../../../utils/validation";
+import { getPlayFieldById } from "../../../services/ProductService";
+import { getInitialPlayFieldForm } from "../../../utils/initialData";
+import { PlayFieldDataEdit } from "../../../payloads/responses/PlayFieldCreate.model";
+import { PlayFieldForm } from "../../../models/PlayFieldForm.model";
 
 interface ModalFormProductProps {
   id?: number;
   handleCreate?: (productForm: FormData) => void;
-  handleEdit?: (id: number, productForm: FormData) => void;
+  handleEdit?: (id: number, productForm: PlayFieldDataEdit) => void;
   onClose: () => void;
   isEdit: boolean;
-}
-
-interface CategoryDataSelection {
-  categoryId: number;
-  categoryCode: string;
-  categoryName: string;
 }
 
 const ModalFormProduct: React.FC<ModalFormProductProps> = ({
@@ -38,61 +33,29 @@ const ModalFormProduct: React.FC<ModalFormProductProps> = ({
   isEdit,
   handleEdit,
 }) => {
-  const brandId = Number(localStorage.getItem("BrandId"));
-  const [categoryOptions, setCategoryOptions] = useState<{ value: number; label: string }[]>([]);
+  const brandId = id;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [formData, setFormData] = useState<ProductForm>(getInitialProductForm());
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const result = await getProduct(brandId);
-        if (result && Array.isArray(result)) {
-          const categories: CategoryDataSelection[] = result.map((category) => ({
-            categoryId: category.categoryId,
-            categoryCode: category.categoryCode,
-            categoryName: category.categoryName,
-          }));
-
-          const options = categories.map((category) => ({
-            value: category.categoryId,
-            label: category.categoryName,
-          }));
-          setCategoryOptions(options);
-        } else {
-          throw new Error("Invalid response format");
-        }
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        toast.error("Error fetching data");
-      }
-    };
-
-    loadData();
-  }, [brandId]);
+  const [formData, setFormData] = useState<PlayFieldForm>(getInitialPlayFieldForm());
 
   useEffect(() => {
     if (isEdit && id) {
       const loadProductData = async () => {
         try {
-          const product = await getProduct(id);
+          setIsLoading(true);
+
+          const product = await getPlayFieldById(id);
+          setIsLoading(false);
+
           if (product) {
             setFormData({
-              category: { value: product.data.categoryId, errorMessage: "" },
-              productName: {
-                value: product.data.productName,
-                errorMessage: "",
-              },
-              image: { value: null, errorMessage: "" },
-              imageUrl: { value: product.data.imageUrl, errorMessage: "" },
-              description: {
-                value: product.data.description,
-                errorMessage: "",
-              },
-              price: { value: Number(product.data.price), errorMessage: "" },
+              playFieldName: { value: product.data.playFieldName, errorMessage: "" },
+              address: { value: product.data.address, errorMessage: "" },
+              status: { value: product.data.status, errorMessage: "" },
+              price: { value: product.data.price, errorMessage: "" },
             });
           } else {
-            throw new Error("Product not found");
+            throw new Error("PlayField not found");
           }
         } catch (err) {
           console.error("Error fetching product data:", err);
@@ -104,39 +67,10 @@ const ModalFormProduct: React.FC<ModalFormProductProps> = ({
     }
   }, []);
 
-  const handleChange = (field: keyof ProductForm, value: string | number) => {
+  const handleChange = (field: keyof PlayFieldForm, value: string | number) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       [field]: { value, errorMessage: "" },
-    }));
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const isImage = isImageFile(file);
-
-      if (!isImage) {
-        setFormData((prevData) => ({
-          ...prevData,
-          image: { value: null, errorMessage: "Tệp phải là một hình ảnh" },
-        }));
-        return;
-      }
-
-      setFormData((prevData) => ({
-        ...prevData,
-        image: { value: file, errorMessage: "" },
-        imageUrl: { value: URL.createObjectURL(file), errorMessage: "" },
-      }));
-    }
-  };
-
-  const handleRemoveImage = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      image: { value: null, errorMessage: "" },
-      imageUrl: { value: "", errorMessage: "" },
     }));
   };
 
@@ -144,104 +78,93 @@ const ModalFormProduct: React.FC<ModalFormProductProps> = ({
     const errors = validateProductForm(formData);
 
     const updatedFormData = {
-      category: { ...formData.category, errorMessage: errors.category },
-      productName: {
-        ...formData.productName,
-        errorMessage: errors.productName,
+      playFieldName: {
+        value: formData.playFieldName.value,
+        errorMessage: errors.playFieldName,
       },
-      image: { ...formData.image, errorMessage: errors.image },
-      imageUrl: { ...formData.imageUrl!, errorMessage: "" },
-      description: {
-        ...formData.description,
-        errorMessage: errors.description,
-      },
-      price: { ...formData.price, errorMessage: errors.price },
+      address: { value: formData.address.value, errorMessage: errors.address },
+      price: { value: formData.price.value, errorMessage: errors.price },
+      status: { value: formData.status.value, errorMessage: errors.status.toString() },
     };
-
     setFormData(updatedFormData);
 
-    const hasErrors = Object.values(errors).some((error) => error !== "");
-    if (!hasErrors) {
-      const productForm = new FormData();
-      productForm.append("CategoryId", formData.category.value?.toString() || "");
-
-      productForm.append("ProductName", formData.productName.value);
-      productForm.append("Description", formData.description.value);
-      productForm.append("Price", formData.price.value?.toString() || "");
-      productForm.append("BrandId", brandId?.toString() || "");
-
-      if (formData.image.value) {
-        productForm.append("image", formData.image.value);
-      }
-      if (!isEdit) {
-        handleCreate?.(productForm);
-      } else {
-        handleEdit?.(id!, productForm);
-      }
-    }
+    const productForm: PlayFieldDataEdit = {
+      playFieldId: id!,
+      playFieldName: formData.playFieldName.value,
+      address: formData.address.value?.toString(),
+      price: formData.price.value,
+      status: formData.status.value,
+    };
+    handleEdit?.(id!, productForm);
   };
 
-  const imageUrl = formData.image.value
-    ? URL.createObjectURL(formData.image.value)
-    : formData.imageUrl?.value;
+  if (isLoading) {
+    return (
+      <Flex
+        position="fixed"
+        top="0"
+        left="0"
+        height="100vh"
+        width="100%"
+        justifyContent="center"
+        alignItems="center"
+        zIndex="9999"
+      >
+        <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="green.500" size="xl" />
+      </Flex>
+    );
+  }
 
   return (
     <>
       <ModalBody>
         <Flex className={style.ModalBody}>
           <Flex className={style.ModalBodyItem}>
-            <Text className={style.FieldTitle}>Loại</Text>
-            <Select
-              options={categoryOptions}
-              closeMenuOnSelect={true}
-              className={style.FlavourSelect}
-              onChange={(selectedOption) => handleChange("category", selectedOption?.value || 0)}
-              value={categoryOptions.find((option) => option.value === formData.category.value)}
-            />
-            {formData.category.errorMessage && (
-              <Text className={style.ErrorText}>{formData.category.errorMessage}</Text>
-            )}
-          </Flex>
-          <Flex className={style.ModalBodyItem}>
-            <Text className={style.FieldTitle}>Tên sản phẩm</Text>
+            <Text className={style.FieldTitle}>PlayField Id</Text>
             <Input
               className={style.InputField}
-              placeholder="VD: Hồng Trà"
-              value={formData.productName.value}
-              onChange={(e) => handleChange("productName", e.target.value)}
+              placeholder="VD: Sân bóng đá"
+              value={brandId}
+              readOnly
             />
-            {formData.productName.errorMessage && (
-              <Text className={style.ErrorText}>{formData.productName.errorMessage}</Text>
-            )}
           </Flex>
           <Flex className={style.ModalBodyItem}>
-            <Text className={style.FieldTitle}>Hình ảnh</Text>
-            {!formData.image.value && !formData.imageUrl?.value && (
-              <Input type="file" className={style.InputFileField} onChange={handleImageChange} />
-            )}
-            {(formData.image.value || (formData.imageUrl && formData.imageUrl.value)) && (
-              <Button onClick={handleRemoveImage} w={40}>
-                Xoá
-              </Button>
-            )}
-            {(formData.image.value || (formData.imageUrl && formData.imageUrl.value)) && (
-              <Image src={imageUrl} alt="Image Preview" className={style.imagePreview} />
-            )}
-            {formData.image.errorMessage && (
-              <Text className={style.ErrorText}>{formData.image.errorMessage}</Text>
-            )}
-          </Flex>
-          <Flex className={style.ModalBodyItem}>
-            <Text className={style.FieldTitle}>Mô tả</Text>
-            <Textarea
+            <Text className={style.FieldTitle}>PlayField Name</Text>
+            <Input
               className={style.InputField}
-              placeholder="Mô tả"
-              value={formData.description.value}
-              onChange={(e) => handleChange("description", e.target.value)}
+              placeholder="VD: Sân bóng đá"
+              value={formData.playFieldName.value}
+              onChange={(e) => handleChange("playFieldName", e.target.value)}
             />
-            {formData.description.errorMessage && (
-              <Text className={style.ErrorText}>{formData.description.errorMessage}</Text>
+            {formData.playFieldName.errorMessage && (
+              <Text className={style.ErrorText}>{formData.playFieldName.errorMessage}</Text>
             )}
+          </Flex>
+          <Flex className={style.ModalBodyItem}>
+            <Text className={style.FieldTitle}>Address</Text>
+            <Input
+              className={style.InputField}
+              placeholder="VD: TPHCM"
+              value={formData.address.value?.toString()}
+              onChange={(e) => handleChange("address", e.target.value)}
+            />
+            {formData.address.errorMessage && (
+              <Text className={style.ErrorText}>{formData.address.errorMessage}</Text>
+            )}
+          </Flex>
+          <Flex className={style.ModalBodyItem}>
+            <Text className={style.FieldTitle}>Status</Text>
+            <select
+              id="isActive"
+              value={formData.status.value}
+              onChange={(e) => handleChange("status", e.target.value)}
+            >
+              <option disabled hidden value="">
+                Select one
+              </option>
+              <option value="2">Active</option>
+              <option value="3">Banned</option>
+            </select>
           </Flex>
           <Flex className={style.ModalBodyItem}>
             <Text className={style.FieldTitle}>Giá</Text>
