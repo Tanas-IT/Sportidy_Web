@@ -1,30 +1,54 @@
-# React + TypeScript + Vite
+# Sportydi
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Logo](https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/SPORTYDI.png?alt=media&token=e5dbca1b-32c2-463b-8c2d-c1c914dccf17)
 
-Currently, two official plugins are available:
+## Project Description
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This application allows users to easily create appointments and book sports fields for activities such as soccer, tennis, badminton, and more. Users can view schedules, check field availability, and make reservations quickly.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- User registration and login
+- View list of sports fields
+- Create appointments and book fields
+- Check-in and check-out when come to playfield
+- Manage booking history
 
-- Configure the top-level `parserOptions` property like this:
+## Technologies Used
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- **Frontend**: React-native, TypeScript
+- **Backend**: .NET
+- **Database**: Microsoft SQL Server
+- **Authentication**: JWT
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+# Member
+
+## Contributors
+
+- **Nguyen Thi Van Anh** - Project Lead
+
+  Email: anhntvss170614@fpt.edu.vn
+
+- **Phan Kim Xuan Nhi** - Project Sub-Lead
+
+  Email: nhipkxss171249@fpt.edu.vn
+
+- **Le Vo Hoang Yen** - Mobile Developer (Android & IOS)
+
+  Email: yenlvhse171789@fpt.edu.vn
+
+- **Huynh Phuoc Tan** - Backend Developer & Frontend Developer (.NET & TypeScript)
+
+  Email: tanhpse173453@fpt.edu.vn
+
+- **Bui The Tam** - Backend Developer (.NET)
+
+  Email: tambtse171869@fpt.edu.vn
+
+- **Nguyen Thai Bao** - Mobile Developer (Android & IOS)
+
+  Email: baontse173498@fpt.edu.vn
+
+## Contact
+
+For any inquiries or feedback, please reach out to us via email at: [support@sportydi.com](mailto:support@sportydi.com).

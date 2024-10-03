@@ -179,15 +179,15 @@ const PagmentHistory = () => {
                     <Td>{payment.playField.playFieldName}</Td>
                     <Td>
                       {payment.status === PaymentStatus.Succeed ? (
-                        <Badge colorScheme="green">Thành công</Badge>
+                        <Badge colorScheme="green">Success</Badge>
                       ) : payment.status === PaymentStatus.Failed ? (
-                        <Badge colorScheme="red">Thất bại</Badge>
+                        <Badge colorScheme="red">Failed</Badge>
                       ) : payment.status === PaymentStatus.Pending ? (
-                        <Badge colorScheme="yellow">Chờ thanh toán</Badge>
+                        <Badge colorScheme="yellow">Pending</Badge>
                       ) : payment.status === PaymentStatus.Cancelled ? (
-                        <Badge colorScheme="red">Đã huỷ</Badge>
+                        <Badge colorScheme="red">Cancel</Badge>
                       ) : (
-                        <Badge colorScheme="red">Có lỗi</Badge>
+                        <Badge colorScheme="red">Have an error</Badge>
                       )}
                     </Td>
                     <Td>{formatCurrencyVND(payment.price.toString())}</Td>

@@ -141,7 +141,7 @@ function Sidebar() {
       <Flex>
         <Flex className={style.Logo}>
           <Avatar src={Logo} className={style.Avatar} />
-          {isExpanded && <Text className={style.LogoText}>SPORTIDI</Text>}
+          {isExpanded && <Text className={style.LogoText}>SPORTYDI</Text>}
         </Flex>
         <IoIosArrowForward
           className={style.ArrowSidebar}

@@ -128,8 +128,8 @@ export const validateProductForm = (formData: PlayFieldForm) => {
   const errors = {
     playFieldName: formData.playFieldName.value ? "" : "Must have name of field",
     price: formData.price.value
-      ? isNaN(Number(formData.price.value)) || Number(formData.price.value) <= 1000
-        ? "Price is a number greater than 1000"
+      ? isNaN(Number(formData.price.value)) || Number(formData.price.value) <= 0
+        ? "Price is a number greater than 0"
         : ""
       : "Price is required",
     address: formData.address.value ? "" : "Address is required",
