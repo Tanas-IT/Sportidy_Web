@@ -37,7 +37,7 @@ export const updatePaymentStatus = async (
   status: PaymentStatus,
 ): Promise<ApiResponse<Object>> => {
   try {
-    const res = await axiosMultipartForm.put("bookings/update-status", {
+    const res = await axiosAuth.put("bookings/update-status", {
       bookingCode: bookingCode,
       status: status,
     });
