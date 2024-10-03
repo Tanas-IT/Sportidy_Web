@@ -46,6 +46,7 @@ export const publicRoutes: RouteItem[] = [
   { path: "/customerSegment", component: CustomerSegment },
   { path: "/playfield", component: Products },
   { path: "/feedback", component: FeedbackDashboard },
+  { path: "/Buying-Guide", component: BuyingGuide, layout: GuestLayout },
   { path: "/categories/:brandName", component: FeedbackDashboard },
   { path: "/menu", component: Menu },
   { path: "/menu/create-menu", component: CreateMenu, layout: HeaderOnly },

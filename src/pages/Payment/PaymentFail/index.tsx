@@ -23,30 +23,20 @@ function PaymentFailure() {
   useEffect(() => {
     const fetchChangePaymentStatus = async () => {
       const queryParams = new URLSearchParams(location.search);
-      const paymentIdParam = queryParams.get("payment-id");
-      const userIdParam = queryParams.get("user-id");
-      const isRenewParam = queryParams.get("is-renew");
+      const playFieldIdParam = queryParams.get("playfieldId");
+      const userIdParam = queryParams.get("userId");
+      const statusParam = queryParams.get("status");
+      const orderCode = queryParams.get("orderCode");
+      const priceParam = queryParams.get("price");
 
-      if (isRenewParam) {
-        setIsRenew(isRenewParam.toLowerCase() === "true");
-      }
-
-      if (paymentIdParam && userIdParam) {
-        const paymentId = parseInt(paymentIdParam);
-        const userId = parseInt(userIdParam);
-
+      if (orderCode && userIdParam) {
         try {
-          const result = await updatePaymentStatus(
-            paymentId,
-            userId,
-            PaymentStatus.Failed,
-            isRenew,
-          );
+          const result = await updatePaymentStatus(orderCode, 2);
         } catch (err) {
           console.error(err);
         }
       } else {
-        console.error("Thông tin ID thanh toán hoặc người dùng không hợp lệ.");
+        console.error("Invalid payment or user ID information.");
       }
     };
 
@@ -54,11 +44,7 @@ function PaymentFailure() {
   }, []);
 
   const handleClickBackHome = () => {
-    if (isRenew) {
-      navigate("/brand-dashboard");
-    } else {
-      navigate("/");
-    }
+    navigate("/");
   };
 
   return (
@@ -78,30 +64,32 @@ function PaymentFailure() {
 
         {/* Tiêu đề */}
         <Heading as="h1" size={headingSize} mb={4}>
-          Thanh toán thất bại!
+          Payment failed!
         </Heading>
 
         {/* Thông báo */}
         <Text fontSize={textSize} mb={6} px={4}>
-          Đã có lỗi xảy ra trong quá trình thanh toán. Vui lòng thử lại sau.
+          An error occurred during payment. Please try again later.
         </Text>
 
         {/* Hướng dẫn các bước khắc phục */}
         <VStack spacing={3} alignItems="center" mb={6} px={4}>
           <Text fontSize={textSize} fontWeight="bold">
-            Bạn có thể thử:
+            You can try:
           </Text>
           <HStack>
             <Icon as={AiOutlineCloseCircle} color="red.500" />
-            <Text fontSize={textSize}>Kiểm tra lại thông tin thẻ hoặc tài khoản của bạn</Text>
+            <Text fontSize={textSize}>Double check your card or account information</Text>
           </HStack>
           <HStack>
             <Icon as={AiOutlineCloseCircle} color="red.500" />
-            <Text fontSize={textSize}>Thử lại sau vài phút nếu có sự cố mạng</Text>
+            <Text fontSize={textSize}>
+              Try again in a few minutes if there is a network problem
+            </Text>
           </HStack>
           <HStack>
             <Icon as={AiOutlineCloseCircle} color="red.500" />
-            <Text fontSize={textSize}>Liên hệ bộ phận hỗ trợ nếu vấn đề vẫn tiếp diễn</Text>
+            <Text fontSize={textSize}>Contact support if problem persists.</Text>
           </HStack>
         </VStack>
 
@@ -114,7 +102,7 @@ function PaymentFailure() {
           width="full"
           maxW="300px"
         >
-          Quay về trang chủ
+          Back to home page
         </Button>
       </Box>
     </Box>

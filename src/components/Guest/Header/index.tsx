@@ -21,6 +21,10 @@ const Header: React.FC = () => {
     }, 200);
   };
 
+  const navigateTo = () => {
+    navigate("/Buying-Guide");
+  };
+
   return (
     <Box
       as="header"
@@ -62,6 +66,9 @@ const Header: React.FC = () => {
             </Link>
             <Link mx={5} fontWeight="bold" onClick={() => handleNavigateAndScroll("feedback")}>
               Feedback
+            </Link>
+            <Link mx={5} fontWeight="bold" onClick={() => navigateTo()}>
+              Payment Instruction
             </Link>
             <Link mx={5} fontWeight="bold" onClick={() => handleNavigateAndScroll("download")}>
               Download

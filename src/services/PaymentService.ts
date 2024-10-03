@@ -4,6 +4,7 @@ import { ApiResponse } from "../payloads/responses/ApiResponse.model";
 import { PaymentStatus } from "../constants/Enum";
 import { PaymentData } from "../payloads/responses/PaymentData.model";
 import { GetData } from "../payloads/responses/GetData.model";
+import axiosMultipartForm from "../api/axiosMultipartForm";
 
 export const getPayments = async (
   currentPage: number | undefined,
@@ -32,17 +33,13 @@ export const checkExistEmail = async (email: string): Promise<ApiResponse<Paymen
 };
 
 export const updatePaymentStatus = async (
-  paymentId: number,
-  userId: number,
+  bookingCode: string,
   status: PaymentStatus,
-  isRenew: boolean,
 ): Promise<ApiResponse<Object>> => {
   try {
-    const res = await axiosAuth.put("payments", {
-      paymentId: paymentId,
-      userId: userId,
+    const res = await axiosMultipartForm.put("bookings/update-status", {
+      bookingCode: bookingCode,
       status: status,
-      isRenew: isRenew,
     });
     const apiResponse = res.data as ApiResponse<Object>;
     return apiResponse;

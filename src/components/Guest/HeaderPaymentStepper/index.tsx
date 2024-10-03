@@ -16,12 +16,12 @@ import {
 } from "@chakra-ui/react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { themeColors } from "../../../constants/GlobalStyles";
-import logo from "../../../assets/images/logoNoBg.png";
+import logo from "../../../assets/images/SPORTYDINoBg.png";
 
 const steps = [
-  { title: "Chọn gói" },
-  { title: "Điền thông tin đăng ký & Thanh toán" },
-  { title: "Kết quả" },
+  { title: "Choose PlayField" },
+  { title: "Fill the payment information" },
+  { title: "Result" },
 ];
 
 const HeaderPaymentStepper: React.FC = () => {
@@ -113,10 +113,10 @@ const HeaderPaymentStepper: React.FC = () => {
             alignItems="center"
             justifyContent="center"
           >
-            <Image src={logo} alt="Logo" w="100%" h="auto" />
+            <Image style={{ transform: "scale(1.5)" }} src={logo} alt="Logo" w="100%" h="auto" />
           </Box>
-          <Heading size="lg" color={themeColors.primaryButton}>
-            Smart Menu
+          <Heading style={{ marginBottom: "16px" }} size="lg" color={themeColors.primaryButton}>
+            Sportydi
           </Heading>
         </Flex>
         {/* Stepper */}
