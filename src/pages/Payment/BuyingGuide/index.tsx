@@ -1,17 +1,9 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  Button,
-  VStack,
-  Divider,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, Button, VStack, Divider } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { themeColors } from "../../../constants/GlobalStyles";
 
-import qr from "../../../assets/images/qrCode.jpg"
+import qr from "../../../assets/images/qrCode.jpg";
 
 function BuyingGuide() {
   const navigate = useNavigate();
@@ -20,34 +12,27 @@ function BuyingGuide() {
     <Box w="100%" h="100%" p={8} backgroundColor="#fff">
       <VStack spacing={6} align="stretch" maxWidth="1000px" mx="auto">
         <Heading as="h1" size="xl">
-          Hướng dẫn thanh toán
+          Payment instructions
         </Heading>
 
+        <Text fontSize="xl">Please transfer money to us in one of the following forms.</Text>
+
         <Text fontSize="xl">
-          Bạn vui lòng chuyển khoản cho chúng tôi theo một trong các hình thức
-          sau đây.
+          After confirming the transfer information, your account will be automatically activated.
+          If you encounter any problems, you can contact us via fanpage or call directly for
+          support.
         </Text>
 
         <Text fontSize="xl">
-          Sau khi xác nhận thông tin chuyển khoản, tài khoản của bạn sẽ được
-          kích hoạt tự động. Nếu gặp bất kỳ vấn đề nào, bạn có thể liên hệ với
-          chúng tôi qua fanpage hoặc gọi điện trực tiếp để được hỗ trợ.
-        </Text>
-
-        <Text fontSize="xl">
-          Liên hệ{" "}
+          Contact{" "}
           <a
-            href="https://www.facebook.com/quangdung.le.1654/"
+            href="https://www.facebook.com/sportydi.fptuni"
             style={{ color: themeColors.primaryButton, fontWeight: "bold" }}
           >
-            fanpage của Smart Menu
+            Sportydi fanpage
           </a>
-          . Hotline hỗ trợ kích hoạt:{" "}
-          <span
-            style={{ color: themeColors.primaryButton, fontWeight: "bold" }}
-          >
-            096-128-7613
-          </span>
+          . Support Hotline:{" "}
+          <span style={{ color: themeColors.primaryButton, fontWeight: "bold" }}>096-128-7613</span>
         </Text>
 
         <Divider />
@@ -55,39 +40,32 @@ function BuyingGuide() {
           <ul>
             <li>
               <Text as="b" fontSize="xl">
-                Ngân hàng Techcombank - Ngân hàng thương mại cổ phần Kỹ Thương
-                Việt Nam
+                BIDV Bank - Vietnam Joint Stock Commercial Bank for Investment and Development
               </Text>
             </li>
             <ul style={{ paddingLeft: 20 }}>
               <li>
                 <Text fontSize="xl">
-                  Chủ TK:{" "}
-                  <b>LE QUANG DUNG</b>
+                  Account holder: <b>BUI THE TAM</b>
                 </Text>
               </li>
               <li>
                 <Text fontSize="xl">
-                  Số tài khoản: <b className="font-12">1903 7874 0450 14</b>
+                  Account number: <b className="font-12">6521960303</b>
                 </Text>
               </li>
               <li>
-                <Text fontSize="xl">
-                  Nội dung chuyển khoản: Tên + SĐT đặt hàng
-                </Text>
+                <Text fontSize="xl">Transfer content: Order_code</Text>
               </li>
               <li>
                 <Box>
                   <Text fontSize="xl" mb="4px">
-                    Quét mã QR{" "}
+                    Scan QR code{" "}
                   </Text>
                 </Box>
-                <Box
-                  id="collapseExtrabank1"
-                  className="accordion-collapse collapse show"
-                >
+                <Box id="collapseExtrabank1" className="accordion-collapse collapse show">
                   <img
-                    src={qr}
+                    src="https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/Account_Intro.jpg?alt=media&token=ca1cd760-097b-4873-990f-d35a7c3ddf53"
                     alt="QR Code"
                     style={{ width: "320px" }}
                   />
@@ -99,9 +77,9 @@ function BuyingGuide() {
 
         <Divider />
 
-        <Text fontSize="xl" textAlign="center">
-          Khi đăng ký gói, bạn xác nhận đã đọc và đồng ý với Điều khoản và điều
-          kiện giao dịch của Smart Menu.
+        <Text fontSize="xl" textAlign="left">
+          When purchasing tickets, you confirm that you have read and agree to Sportydi's Terms and
+          Conditions of Transaction.
         </Text>
 
         {/* <Flex justifyContent="center">
