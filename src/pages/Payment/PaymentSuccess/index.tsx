@@ -27,18 +27,18 @@ function PaymentSuccess() {
       const playFieldIdParam = queryParams.get("playfieldId");
       const userIdParam = queryParams.get("userId");
       const statusParam = queryParams.get("status");
-      const orderCode = queryParams.get("orderCode");
+      const bookingCode = queryParams.get("bookingCode");
       const priceParam = queryParams.get("price");
 
       if (statusParam != null && statusParam.toUpperCase() != "PAID") {
         navigate(
-          `/payment/payment-failure?playFieldIdParam=${playFieldIdParam}&userId=${userIdParam}&orderCode=${orderCode}&price=${priceParam}`,
+          `/payment/payment-failure?playFieldIdParam=${playFieldIdParam}&userId=${userIdParam}&orderCode=${bookingCode}&price=${priceParam}`,
         );
       }
 
-      if (userIdParam && orderCode) {
+      if (userIdParam && bookingCode) {
         try {
-          const result = await updatePaymentStatus(orderCode, 3);
+          const result = await updatePaymentStatus(bookingCode, 3);
           if (result.data) {
             toast.success("Payment Success");
           }

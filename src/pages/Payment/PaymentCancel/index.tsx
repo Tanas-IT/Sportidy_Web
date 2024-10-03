@@ -26,12 +26,12 @@ function PaymentCancel() {
       const playFieldIdParam = queryParams.get("playfieldId");
       const userIdParam = queryParams.get("userId");
       const statusParam = queryParams.get("status");
-      const orderCode = queryParams.get("orderCode");
+      const bookingCode = queryParams.get("bookingCode");
       const priceParam = queryParams.get("price");
 
-      if (userIdParam && orderCode) {
+      if (userIdParam && bookingCode) {
         try {
-          const result = updatePaymentStatus(orderCode, 4);
+          const result = updatePaymentStatus(bookingCode, 4);
         } catch (err) {
           console.error(err);
         }

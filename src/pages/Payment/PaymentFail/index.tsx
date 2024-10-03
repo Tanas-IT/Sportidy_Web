@@ -26,12 +26,12 @@ function PaymentFailure() {
       const playFieldIdParam = queryParams.get("playfieldId");
       const userIdParam = queryParams.get("userId");
       const statusParam = queryParams.get("status");
-      const orderCode = queryParams.get("orderCode");
+      const bookingCode = queryParams.get("bookingCode");
       const priceParam = queryParams.get("price");
 
-      if (orderCode && userIdParam) {
+      if (bookingCode && userIdParam) {
         try {
-          const result = await updatePaymentStatus(orderCode, 2);
+          const result = await updatePaymentStatus(bookingCode, 2);
         } catch (err) {
           console.error(err);
         }
