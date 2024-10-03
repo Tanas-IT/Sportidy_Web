@@ -17,6 +17,7 @@ import {
 } from "../payloads/responses/DashboarData.model";
 import { PlanData } from "../payloads/responses/PlanResponse.model";
 import { SubscriptionData } from "../payloads/responses/SubscriptionData.model";
+import { PlayFieldForm } from "../models/PlayFieldForm.model";
 
 export const getInitialUserForm = (): UserForm => ({
   fullName: {
@@ -177,4 +178,11 @@ export const getInitialLimitBrandData = (): LimitBrandData => ({
   maxAccount: 0,
   numberMenu: 0,
   numberAccount: 0,
+});
+
+export const getInitialPlayFieldForm = (): PlayFieldForm => ({
+  playFieldName: { value: "", errorMessage: "" },
+  address: { value: "", errorMessage: "" },
+  price: { value: 0, errorMessage: "" },
+  status: { value: 0, errorMessage: "" },
 });

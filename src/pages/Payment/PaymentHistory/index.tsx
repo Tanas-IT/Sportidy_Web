@@ -1,5 +1,6 @@
 import {
   Badge,
+  Button,
   Flex,
   Table,
   TableCaption,
@@ -15,17 +16,12 @@ import Searchbar from "../../../components/Searchbar";
 import Loading from "../../../components/Loading";
 import NavigationDot from "../../../components/NavigationDot/NavigationDot";
 import style from "./PaymentHistory.module.scss";
-import {
-  formatCurrency,
-  formatCurrencyVND,
-  formatDateAndTime,
-  getOptions,
-} from "../../../utils/functionHelper";
+import { formatCurrencyVND, formatDateAndTime, getOptions } from "../../../utils/functionHelper";
 import { PaymentData } from "../../../payloads/responses/PaymentData.model";
 import { toast } from "react-toastify";
 import { getPayments } from "../../../services/PaymentService";
-import moment from "moment";
 import { PaymentStatus } from "../../../constants/Enum";
+import * as XLSX from "xlsx";
 
 const PagmentHistory = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -98,26 +94,70 @@ const PagmentHistory = () => {
     fetchData(value);
   }
 
+  async function handleExportToExcel() {
+    const downloadData = await getPayments(undefined, undefined, undefined);
+    // Xử lý dữ liệu: Loại bỏ các thuộc tính không mong muốn và map playFieldName, status
+    const filteredData = downloadData.list.map((item: PaymentData) => {
+      const { playField, playFieldFeedbacks, payments, customerId, playFieldId, status, ...rest } =
+        item;
+
+      // Chuyển đổi giá trị status thành chuỗi
+      let statusText = "";
+      switch (status) {
+        case 1:
+          statusText = "Success";
+          break;
+        case 2:
+          statusText = "Failed";
+          break;
+        case 3:
+          statusText = "Pending";
+          break;
+        case 4:
+          statusText = "Cancelled";
+          break;
+        default:
+          statusText = "Have an error"; // Hoặc một giá trị mặc định khác nếu cần
+      }
+
+      // Thêm playFieldName từ playField vào rest và status đã chuyển đổi
+      return {
+        ...rest,
+        playFieldName: playField?.playFieldName,
+        status: statusText, // Chuyển đổi status sang chuỗi
+      };
+    });
+    const worksheet = XLSX.utils.json_to_sheet(filteredData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Statistic");
+    XLSX.writeFile(workbook, "Transaction_History.xlsx");
+  }
+
   return (
     <Flex className={style.container}>
       <Flex className={style.searchWrapper}>
         <Searchbar onSearch={handleSearch} />
+        <Button
+          onClick={handleExportToExcel}
+          style={{ marginRight: "18px", backgroundColor: "#466d6b", color: "white" }}
+        >
+          Export To Excel
+        </Button>
       </Flex>
       <Flex className={style.PaymentHistory}>
         <TableContainer className={style.PaymentHistoryTbl}>
           <Table>
-            <TableCaption>Bảng quản lý lịch sử thanh toán</TableCaption>
+            <TableCaption>Table Manage Transaction History</TableCaption>
             <Thead>
               <Tr>
-                <Th className={style.HeaderTbl}>Id</Th>
-                <Th className={style.HeaderTbl}>Mã giao dịch</Th>
-                <Th className={style.HeaderTbl}>Email</Th>
-                <Th className={style.HeaderTbl}>Ngày & Giờ tạo</Th>
-                <Th className={style.HeaderTbl}>Ngày & Giờ cập nhật</Th>
-                <Th className={style.HeaderTbl}>Tổng tiền</Th>
-                <Th className={style.HeaderTbl}>Trạng thái</Th>
-                <Th className={style.HeaderTbl}>Gói</Th>
-                <Th className={style.HeaderTbl}>Phương thức</Th>
+                <Th className={style.HeaderTbl}>Booking Code</Th>
+                <Th className={style.HeaderTbl}>Booking Date</Th>
+                <Th className={style.HeaderTbl}>PlayField Name</Th>
+                <Th className={style.HeaderTbl}>Status</Th>
+                <Th className={style.HeaderTbl}>Price</Th>
+                <Th className={style.HeaderTbl}>Bank Code</Th>
+                <Th className={style.HeaderTbl}>Bank Brand</Th>
+                <Th className={style.HeaderTbl}>PlayField Owner's Name</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -129,20 +169,14 @@ const PagmentHistory = () => {
                 </Tr>
               ) : data.length === 0 ? (
                 <Tr>
-                  <Td colSpan={10}>Không có lịch sử để hiển thị</Td>
+                  <Td colSpan={10}>No Transaction History For Display</Td>
                 </Tr>
               ) : (
                 data.map((payment, index) => (
-                  <Tr
-                    key={payment.paymentId}
-                    className={style.PaymentHistoryItem}
-                  >
+                  <Tr key={payment.bookingId} className={style.PaymentHistoryItem}>
                     <Td>{(currentPage - 1) * rowsPerPage + index + 1}</Td>
-                    <Td>#{payment.transactionId}</Td>
-                    <Td>{payment.email}</Td>
-                    <Td>{formatDateAndTime(payment.createdAt)}</Td>
-                    <Td>{formatDateAndTime(payment.updatedAt)}</Td>
-                    <Td>{formatCurrencyVND(payment.amount.toString())}</Td>
+                    <Td>{formatDateAndTime(payment.bookingDate)}</Td>
+                    <Td>{payment.playField.playFieldName}</Td>
                     <Td>
                       {payment.status === PaymentStatus.Succeed ? (
                         <Badge colorScheme="green">Thành công</Badge>
@@ -156,8 +190,10 @@ const PagmentHistory = () => {
                         <Badge colorScheme="red">Có lỗi</Badge>
                       )}
                     </Td>
-                    <Td>{payment.planName}</Td>
-                    <Td>Credit Card</Td>
+                    <Td>{formatCurrencyVND(payment.price.toString())}</Td>
+                    <Td>{payment.bankCode}</Td>
+                    <Td>{payment.bankName}</Td>
+                    <Td>{payment.playFieldOwnerName}</Td>
                   </Tr>
                 ))
               )}

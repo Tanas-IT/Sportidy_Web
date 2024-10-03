@@ -34,6 +34,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ActionMenuProduct from "../../components/ActionMenu/ActionMenuProduct/ActionMenuProduct";
 import { formatCurrency, getOptions } from "../../utils/functionHelper";
 import { PlayFieldData } from "../../payloads/responses/PlayFieldData.model";
+import { PlayFieldDataEdit } from "../../payloads/responses/PlayFieldCreate.model";
 
 function Product() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -141,8 +142,9 @@ function Product() {
     }
   }
 
-  async function handleEdit(id: number, plafieldForm: FormData) {
+  async function handleEdit(id: number, plafieldForm: PlayFieldDataEdit) {
     try {
+      console.log("Before Update: ", id);
       const result = await updatePlayfield(id, plafieldForm);
       if (result.statusCode === 200) {
         fetchData();
@@ -178,7 +180,7 @@ function Product() {
             <TableCaption>Table Of Manage PlayField</TableCaption>
             <Thead>
               <Tr>
-                <Th className={style.HeaderTbl}>Id</Th>
+                <Th className={style.HeaderTbl}>No.</Th>
                 <Th className={style.HeaderTbl}>Playfield Name</Th>
                 <Th className={style.HeaderTbl}>Image</Th>
                 <Th className={style.HeaderTbl}>Type</Th>

@@ -17,11 +17,12 @@ import { useTranslation } from "react-i18next";
 import CustomAlertDialog from "../../AlertDialog";
 import ModalForm from "../../Modals/ModalForm/ModalForm";
 import ModalFormProduct from "../../Modals/ModalFormProduct/ModalFormProduct";
+import { PlayFieldDataEdit } from "../../../payloads/responses/PlayFieldCreate.model";
 
 interface ActionMenuProps {
   id: number;
   onDelete: (id: number) => void;
-  onEdit: (id: number, product: FormData) => void;
+  onEdit: (id: number, product: PlayFieldDataEdit) => void;
 }
 
 const ActionMenuProduct: FC<ActionMenuProps> = ({ id, onDelete, onEdit }) => {

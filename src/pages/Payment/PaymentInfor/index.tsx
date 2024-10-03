@@ -356,7 +356,7 @@ const PaymentInfoPage = () => {
 
         let brandResult;
         if (payment.data != null) {
-          brandResult = await updateOldBrand(payment.data.userId);
+          brandResult = await updateOldBrand(payment.data.bookingId);
         } else {
           brandResult = await addNewBrand();
         }

@@ -2,7 +2,7 @@ import { BranchForm } from "../models/BranchForm.model";
 import { BrandForm } from "../models/BrandForm.model";
 import { Menu } from "../models/Menu.model";
 import { PasswordForm } from "../models/Password.model";
-import { ProductForm } from "../models/ProductForm.model";
+import { PlayFieldForm } from "../models/PlayFieldForm.model";
 import { CustomerSegmentForm } from "../models/SegmentForm.model";
 import { UserForm } from "../models/UserForm.model";
 
@@ -56,10 +56,7 @@ export const validateEmail = (email: string) => {
   return ""; // Trả về rỗng nếu không có lỗi
 };
 
-export const validateVerificationCode = (
-  code: string,
-  expectedCode: string,
-) => {
+export const validateVerificationCode = (code: string, expectedCode: string) => {
   if (code.trim() === "") {
     return "Mã xác nhận là bắt buộc";
   } else if (code.trim() !== expectedCode) {
@@ -127,33 +124,17 @@ export const validateBranchForm = (formData: BranchForm) => {
   return errors;
 };
 
-export const validateProductForm = (formData: ProductForm) => {
+export const validateProductForm = (formData: PlayFieldForm) => {
   const errors = {
-    category: formData.category.value ? "" : "Danh mục là bắt buộc",
-    productName: formData.productName.value ? "" : "Tên sản phẩm là bắt buộc",
-    image: "",
-    description: formData.description.value
-      ? formData.description.value.length < 5 ||
-        formData.description.value.length > 300
-        ? "Mô tả phải từ 5 đến 300 ký tự"
-        : ""
-      : "Mô tả là bắt buộc",
+    playFieldName: formData.playFieldName.value ? "" : "Must have name of field",
     price: formData.price.value
-      ? isNaN(Number(formData.price.value)) ||
-        Number(formData.price.value) <= 1000
-        ? "Giá phải là một số lớn hơn 1000 có định dạng: 1000000"
+      ? isNaN(Number(formData.price.value)) || Number(formData.price.value) <= 1000
+        ? "Price is a number greater than 1000"
         : ""
-      : "Giá là bắt buộc",
+      : "Price is required",
+    address: formData.address.value ? "" : "Address is required",
+    status: formData.price.value,
   };
-
-  if (
-    !formData.image.value &&
-    !formData.imageUrl?.value &&
-    !formData.image.errorMessage
-  ) {
-    errors.image = "Hình ảnh là bắt buộc";
-  }
-
   return errors;
 };
 
@@ -171,29 +152,17 @@ export const validateCustomerSegmentForm = (formData: CustomerSegmentForm) => {
 
   if (!formData.ageFrom.value) {
     errors.ageFrom = "Tuổi bắt đầu là bắt buộc";
-  } else if (
-    isNaN(Number(formData.ageFrom.value)) ||
-    Number(formData.ageFrom.value) <= 0
-  ) {
+  } else if (isNaN(Number(formData.ageFrom.value)) || Number(formData.ageFrom.value) <= 0) {
     errors.ageFrom = "Tuổi bắt đầu phải là một số lớn hơn 0";
-  } else if (
-    !isInteger(formData.ageFrom.value) ||
-    Number(formData.ageFrom.value) <= 0
-  ) {
+  } else if (!isInteger(formData.ageFrom.value) || Number(formData.ageFrom.value) <= 0) {
     errors.ageFrom = "Tuổi bắt đầu phải là một số nguyên dương";
   }
 
   if (!formData.ageTo.value) {
     errors.ageTo = "Tuổi kết thúc là bắt buộc";
-  } else if (
-    isNaN(Number(formData.ageTo.value)) ||
-    Number(formData.ageTo.value) <= 0
-  ) {
+  } else if (isNaN(Number(formData.ageTo.value)) || Number(formData.ageTo.value) <= 0) {
     errors.ageTo = "Tuổi kết thúc phải là một số lớn hơn 0";
-  } else if (
-    !isInteger(formData.ageTo.value) ||
-    Number(formData.ageTo.value) <= 0
-  ) {
+  } else if (!isInteger(formData.ageTo.value) || Number(formData.ageTo.value) <= 0) {
     errors.ageTo = "Tuổi kết thúc phải là một số nguyên dương";
   } else if (Number(formData.ageTo.value) <= Number(formData.ageFrom.value)) {
     errors.ageTo = "Tuổi kết thúc phải lớn hơn tuổi bắt đầu";
@@ -205,8 +174,7 @@ export const validateCustomerSegmentForm = (formData: CustomerSegmentForm) => {
 export const validateMenu = (menu: Menu) => {
   const errors = {
     description: menu.description.value !== "" ? "" : "Mô tả là bắt buộc",
-    segmentId:
-      menu.segmentId.value.length > 0 ? "" : "Phân khúc khách hàng là bắt buộc",
+    segmentId: menu.segmentId.value.length > 0 ? "" : "Phân khúc khách hàng là bắt buộc",
     priority: menu.priority.value !== 0 ? "" : "Độ ưu tiên là bắt buộc",
   };
 
@@ -215,12 +183,9 @@ export const validateMenu = (menu: Menu) => {
 
 export const validatePassword = (passwordForm: PasswordForm) => {
   const errors = {
-    oldPassword:
-      passwordForm.oldPassword.value !== "" ? "" : "Mật khẩu cũ là bắt buộc",
+    oldPassword: passwordForm.oldPassword.value !== "" ? "" : "Mật khẩu cũ là bắt buộc",
     newPassword:
-      passwordForm.newPassword.value.length >= 6
-        ? ""
-        : "Mật khẩu mới phải có ít nhất 6 ký tự",
+      passwordForm.newPassword.value.length >= 6 ? "" : "Mật khẩu mới phải có ít nhất 6 ký tự",
     confirm:
       passwordForm.confirm.value === passwordForm.newPassword.value
         ? ""
