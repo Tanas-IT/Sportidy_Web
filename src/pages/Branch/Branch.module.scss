@@ -1,0 +1,31 @@
+@import "../../styles/shared.scss";
+
+.container {
+  @extend .container;
+
+  .searchWrapper {
+    @extend .searchWrapper;
+    .searchWrapperSub {
+      @extend .searchWrapperSub;
+    }
+    .searchWrapperCount {
+      @extend .searchWrapperCount;
+    }
+  }
+
+  .Branch {
+    @extend .table;
+
+    .BranchTbl {
+      @extend .tableContainer;
+      @extend .shadow;
+
+      .BranchItem {
+        @extend .tableItem;
+      }
+    }
+    .HeaderTbl {
+      @extend .header;
+    }
+  }
+}

@@ -1,0 +1,114 @@
+@import "../../../styles/shared.scss";
+
+.profile_container {
+  @extend .profile_container;
+
+  .icon {
+    @extend .icon;
+  }
+
+  .tabs_container {
+    @extend .tabs_container;
+    .tab_list {
+      @extend .tab_list;
+      .tab {
+        @extend .tab;
+        .tab_text {
+          @extend .tab_text;
+        }
+      }
+    }
+
+    .tab_panels {
+      @extend .tab_panels;
+
+      .tab_panels_container {
+        @extend .tab_panels_container;
+        .tab_panels_container_title {
+          @extend .tab_panels_container_title;
+        }
+        .tab_panels_container_content {
+          @extend .tab_panels_container_content;
+          .tab_panels_container_content_column {
+            @extend .tab_panels_container_column;
+          }
+        }
+        .text_title_content {
+          @extend .text_title_content;
+
+          .tab_panels_container_form {
+            @extend .tab_panels_container_form;
+
+            .tab_panels_form {
+              @extend .tab_panels_form;
+            }
+          }
+          .text_content {
+            @extend .text_content;
+          }
+        }
+        .text_title_container_content_column {
+          @extend .text_title_container_content_column;
+        }
+        .tab_panels_container_column {
+          @extend .tab_panels_container_column;
+        }
+      }
+    }
+  }
+  .btn_container {
+    @extend .btn_container;
+    .btn_content {
+      @extend .btn_content;
+    }
+  }
+
+  .btn_delete {
+    @extend .btn_delete;
+  }
+
+  .payment_history_container {
+    @extend .payment_history_container;
+  }
+
+  .payment_history_header {
+    @extend .payment_history_header;
+  }
+
+  .payment_history_header_text {
+    @extend .payment_history_header_text;
+  }
+
+  .payment_history_list {
+    @extend .payment_history_list;
+  }
+
+  .payment_history_item {
+    @extend .payment_history_item;
+  }
+
+  .payment_history_item_label {
+    @extend .payment_history_item_label;
+  }
+
+  .payment_history_item_value {
+    @extend .payment_history_item_value;
+  }
+}
+
+// .input-file {
+//   padding: 0.5rem;
+//   border: 2px solid #ccc;
+//   border-radius: 8px;
+//   background-color: #f8f8f8;
+//   cursor: pointer;
+//   width: 100%;
+
+//   &:hover {
+//     border-color: #aaa;
+//   }
+
+//   &:focus {
+//     outline: none;
+//   }
+// }
