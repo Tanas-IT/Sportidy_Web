@@ -22,12 +22,14 @@ function LandingPage() {
       navigate("/");
     }
 
-    setTimeout(() => {
-      const element = document.getElementById(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 200);
+    const apkUrl =
+      "https://drive.google.com/uc?export=download&id=1jjt3wlaxQPtRqN_sMEjiJqzvs6INprDJ"; // Thay đổi đường dẫn đến tệp APK của bạn
+    const link = document.createElement("a");
+    link.href = apkUrl;
+    link.download = "sportydi.apk"; // Tên tệp sẽ được lưu
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -439,7 +441,7 @@ function LandingPage() {
             </Box>
           </Flex>
         </Box>
-        <h1 style={{ fontSize: "40px", fontWeight: "bold", marginTop: "12px" }}>
+        {/* <h1 style={{ fontSize: "40px", fontWeight: "bold", marginTop: "12px" }}>
           Download Manual Expo Go
         </h1>
         <Flex
@@ -644,7 +646,7 @@ function LandingPage() {
               />
             </div>
           </div>
-        </Flex>
+        </Flex> */}
       </Flex>
     </>
   );
