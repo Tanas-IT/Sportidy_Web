@@ -1,5 +1,5 @@
 .title {
-  color: #4D4D4D !important;
+  color: #4d4d4d !important;
   margin-bottom: 8px;
   font-size: 2.25rem !important;
 }
@@ -12,8 +12,18 @@
 }
 
 .imgBgWhite {
-    background-color: #fff;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
+  background-color: #fff;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .scrollable {
+    min-height: 100%; /* Chiều cao tối đa là 80% chiều cao viewport */
+    min-width: 100%; /* Chiều rộng tối đa */
+    overflow-y: auto; /* Thêm thanh cuộn dọc */
+    overflow-x: auto; /* Thêm thanh cuộn ngang */
+    width: 100%; /* Đảm bảo phần cuộn sử dụng toàn bộ chiều rộng */
   }
+}
