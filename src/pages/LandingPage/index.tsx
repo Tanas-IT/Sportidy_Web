@@ -36,7 +36,7 @@ function LandingPage() {
     <>
       <Flex direction="column" align="center" justify="center" w="100%" h="auto">
         <Box id="intro" py={24} px={24} bg="#F5F7FA" w="100%">
-          <Flex align="center" justify="space-around">
+          <Flex align="center" justify="space-around" className={style.scrollable}>
             <Box textAlign="start">
               <Heading size="2xl" mb={4} color={themeColors.textColor}>
                 Discover Your Sports Tribe with SPORTYDI
@@ -390,7 +390,7 @@ function LandingPage() {
 
         {/* Download */}
         <Box id="download" pb={8} px={24} textAlign="center" bg="#fff" w="100%">
-          <Flex align="center" justify="flex-start">
+          <Flex align="center" justify="flex-start" className={style.scrollable}>
             <Box textAlign="left" marginLeft="6rem">
               <Heading
                 style={{ textTransform: "uppercase", color: "#000", width: "550px" }}
@@ -441,216 +441,9 @@ function LandingPage() {
             </Box>
           </Flex>
         </Box>
-        {/* <h1 style={{ fontSize: "40px", fontWeight: "bold", marginTop: "12px" }}>
-          Download Manual Expo Go
-        </h1>
-        <Flex
-          justify="space-between"
-          gap={2}
-          className="service-section"
-          style={{ display: "flex", justifyContent: "space-between", gap: "16px", height: "870px" }}
-        >
-          <div
-            className="service-columns"
-            style={{ display: "flex", justifyContent: "space-between", gap: "16px", width: "100%" }}
-          >
-            <div className="service-column" style={{ flex: "1 1 33%", boxSizing: "border-box" }}>
-              <p
-                className="service-content"
-                style={{
-                  fontSize: "36px",
-                  fontWeight: "bold",
-                  marginBottom: "5px",
-                  textAlign: "center",
-                }}
-              >
-                Step 1
-              </p>
-              <p
-                className="service-content2"
-                style={{
-                  fontSize: "20px",
-                  marginTop: "5px",
-                  marginBottom: "20px",
-                  textAlign: "center",
-                }}
-              >
-                Go to CH Play or App Store and find "Expo Go"
-              </p>
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/down.97926c7d.jpg?alt=media&token=56931761-a449-4752-bfeb-72b3ecd36ad0"
-                alt="Service 1"
-                style={{ width: "100%", height: "600px", objectFit: "contain" }}
-              />
-            </div>
-
-            <div className="service-column" style={{ flex: "1 1 33%", boxSizing: "border-box" }}>
-              <p
-                className="service-content"
-                style={{
-                  fontSize: "36px",
-                  fontWeight: "bold",
-                  marginBottom: "5px",
-                  textAlign: "center",
-                }}
-              >
-                Step 2
-              </p>
-              <p
-                className="service-content2"
-                style={{
-                  fontSize: "20px",
-                  marginTop: "5px",
-                  marginBottom: "20px",
-                  textAlign: "center",
-                }}
-              >
-                After download the icon of Expo Go is like below:
-              </p>
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/down1.1cea29d7.jpg?alt=media&token=f0f89895-9633-495b-be7b-94075ff62f0d"
-                alt="Service 2"
-                style={{ width: "100%", height: "600px", objectFit: "contain" }}
-              />
-            </div>
-
-            <div className="service-column" style={{ flex: "1 1 33%", boxSizing: "border-box" }}>
-              <p
-                className="service-content"
-                style={{
-                  fontSize: "36px",
-                  fontWeight: "bold",
-                  marginBottom: "5px",
-                  textAlign: "center",
-                }}
-              >
-                Step 3
-              </p>
-              <p
-                className="service-content2"
-                style={{
-                  fontSize: "20px",
-                  marginTop: "5px",
-                  textAlign: "center",
-                  marginBottom: "20px",
-                }}
-              >
-                After download the icon of Expo Go is like below
-              </p>
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/down2.73c3bb69.jpg?alt=media&token=cfaa0f98-2368-4178-be05-0b389a9ac523"
-                alt="Service 3"
-                style={{ width: "100%", height: "70%", objectFit: "contain" }}
-              />
-            </div>
-          </div>
-        </Flex>
-
-        <h1 style={{ fontSize: "40px", fontWeight: "bold", marginBottom: "20px" }}>
-          User Manual Sportydi App
-        </h1>
-        <Flex
-          justify="space-between"
-          gap={2}
-          className="service-section"
-          style={{ display: "flex", justifyContent: "space-between", gap: "16px", height: "870px" }}
-        >
-          <div
-            className="service-columns"
-            style={{ display: "flex", justifyContent: "space-between", gap: "16px", width: "100%" }}
-          >
-            <div className="service-column" style={{ flex: "1 1 33%", boxSizing: "border-box" }}>
-              <p
-                className="service-content"
-                style={{
-                  fontSize: "36px",
-                  fontWeight: "bold",
-                  marginBottom: "5px",
-                  marginLeft: "20px",
-                }}
-              >
-                Step 1
-              </p>
-              <p
-                className="service-content2"
-                style={{
-                  fontSize: "20px",
-                  marginTop: "5px",
-                  marginLeft: "20px",
-                  marginBottom: "10px",
-                }}
-              >
-                Download Expo go in chplay or appstore and Scan qr code with suitable operating
-                system
-              </p>
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/app.e9357961.png?alt=media&token=f0b44b72-6e08-4b6a-af48-ab8091bd1f94"
-                alt="Service 1"
-                style={{ width: "100%", height: "auto" }}
-              />
-            </div>
-
-            <div className="service-column" style={{ flex: "1 1 33%", boxSizing: "border-box" }}>
-              <p
-                className="service-content"
-                style={{
-                  fontSize: "36px",
-                  fontWeight: "bold",
-                  marginBottom: "5px",
-                  marginTop: "10px",
-                  marginLeft: "20px",
-                }}
-              >
-                Step 2
-              </p>
-              <p
-                className="service-content2"
-                style={{
-                  fontSize: "20px",
-                  marginTop: "5px",
-                  marginLeft: "20px",
-                  marginBottom: "10px",
-                }}
-              >
-                If you want to take the URL manually then click to “ENTER URL manually”
-              </p>
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/app01.038e8ee8.png?alt=media&token=5a1d7f5a-ec8a-4b09-97ce-e68da7c5bed1"
-                alt="Service 2"
-                style={{ width: "100%", height: "500px", objectFit: "contain" }}
-              />
-            </div>
-
-            <div className="service-column" style={{ flex: "1 1 33%", boxSizing: "border-box" }}>
-              <p
-                className="service-content"
-                style={{
-                  fontSize: "36px",
-                  fontWeight: "bold",
-                  marginBottom: "5px",
-                }}
-              >
-                Step 3
-              </p>
-              <p
-                className="service-content2"
-                style={{ fontSize: "20px", marginTop: "5px", marginBottom: "20px" }}
-              >
-                - Android: exp://u.expo.dev/update/eb4e5b55-6725-44e2-bc3b-65b3fd89a1ef <br /> -
-                IOS: exp://u.expo.dev/update/f360ad55-20f8-4fec-8aa2-23d6be489a4e
-              </p>
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/sportidy-447fd.appspot.com/o/app2.4e037969.png?alt=media&token=1588fda4-8da2-4035-be04-1cad2202ac1b"
-                alt="Service 3"
-                style={{ width: "100%", height: "50%", objectFit: "contain" }}
-              />
-            </div>
-          </div>
-        </Flex> */}
       </Flex>
     </>
   );
 }
 
 export default LandingPage;
-

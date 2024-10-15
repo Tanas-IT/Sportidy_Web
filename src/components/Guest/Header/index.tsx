@@ -4,6 +4,7 @@ import { FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { themeColors } from "../../../constants/GlobalStyles";
 import logo from "../../../assets/images/SPORTYDINoBg.png";
+import style from "./Header.module.scss";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const Header: React.FC = () => {
         </Flex>
 
         {/* Liên kết và nút */}
-        <Flex justify="flex-start" align="center">
+        <Flex className={style.scrollable} justify="flex-start" align="center">
           <Flex align="flex-end" fontSize="lg">
             <Link mx={5} fontWeight="bold" onClick={() => handleNavigateAndScroll("intro")}>
               Introduction

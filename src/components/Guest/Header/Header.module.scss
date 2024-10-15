@@ -1,0 +1,9 @@
+@media (max-width: 768px) {
+  .scrollable {
+    max-height: 80vh; /* Chiều cao tối đa là 80% chiều cao viewport */
+    max-width: 100%; /* Chiều rộng tối đa */
+    overflow-y: auto; /* Thêm thanh cuộn dọc */
+    overflow-x: auto; /* Thêm thanh cuộn ngang */
+    width: 100%; /* Đảm bảo phần cuộn sử dụng toàn bộ chiều rộng */
+  }
+}
