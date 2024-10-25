@@ -26,6 +26,9 @@ import * as XLSX from "xlsx";
 const PagmentHistory = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
+  const [sortedData, setSortedData] = useState<PaymentData[]>([]);
+  const [sortBy, setSortBy] = useState<keyof PaymentData>("bookingDate");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [data, setData] = useState<PaymentData[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(5);
@@ -74,6 +77,58 @@ const PagmentHistory = () => {
   useEffect(() => {
     fetchData();
   }, [fetchData, currentPage, isInitialLoad]);
+
+  // Sắp xếp dữ liệu phía client
+  useEffect(() => {
+    const sorted = [...data].sort((a, b) => {
+      let valA, valB;
+
+      // Xác định giá trị cần so sánh theo loại dữ liệu
+      if (sortBy === "price") {
+        // Giá trị dạng số (price)
+        valA = a[sortBy] as unknown as number;
+        valB = b[sortBy] as unknown as number;
+      } else if (sortBy === "bookingDate") {
+        // Giá trị dạng ngày (bookingDate)
+        valA = new Date(a[sortBy] as unknown as string).getTime();
+        valB = new Date(b[sortBy] as unknown as string).getTime();
+      } else if (sortBy === "bookingId") {
+        // Giá trị dạng chuỗi (bookingId)
+        valA = a[sortBy] as unknown as string;
+        valB = b[sortBy] as unknown as string;
+      } else if (sortBy === "playFieldName") {
+        // Giá trị dạng chuỗi từ playField (playFieldName)
+        valA = a.playField.playFieldName.toLowerCase();
+        valB = b.playField.playFieldName.toLowerCase();
+      } else if (sortBy === "status") {
+        const statusTextMapping: { [key in 1 | 2 | 3 | 4]: string } = {
+          1: "Success",
+          2: "Failed",
+          3: "Pending",
+          4: "Cancelled",
+        };
+
+        // Kiểm tra và ép kiểu giá trị
+        valA = statusTextMapping[a[sortBy] as 1 | 2 | 3 | 4] || "Unknown";
+        valB = statusTextMapping[b[sortBy] as 1 | 2 | 3 | 4] || "Unknown";
+      } else if (sortBy === "playFieldOwnerName") {
+        // Giá trị dạng chuỗi (playFieldOwnerName)
+        valA = a.playFieldOwnerName.toLowerCase();
+        valB = b.playFieldOwnerName.toLowerCase();
+      } else {
+        // Giá trị mặc định (các trường khác) là chuỗi
+        valA = (a[sortBy] as string).toLowerCase();
+        valB = (b[sortBy] as string).toLowerCase();
+      }
+
+      if (sortDirection === "asc") {
+        return valA > valB ? 1 : -1;
+      } else {
+        return valA < valB ? 1 : -1;
+      }
+    });
+    setSortedData(sorted);
+  }, [data, sortBy, sortDirection]);
 
   const handlePageChange = useCallback(
     (page: number) => {
@@ -133,6 +188,12 @@ const PagmentHistory = () => {
     XLSX.writeFile(workbook, "Transaction_History.xlsx");
   }
 
+  const handleSort = (column: keyof PaymentData) => {
+    const newDirection = sortBy === column && sortDirection === "asc" ? "desc" : "asc";
+    setSortBy(column);
+    setSortDirection(newDirection);
+  };
+
   return (
     <Flex className={style.container}>
       <Flex className={style.searchWrapper}>
@@ -150,14 +211,26 @@ const PagmentHistory = () => {
             <TableCaption>Table Manage Transaction History</TableCaption>
             <Thead>
               <Tr>
-                <Th className={style.HeaderTbl}>Booking Code</Th>
-                <Th className={style.HeaderTbl}>Booking Date</Th>
-                <Th className={style.HeaderTbl}>PlayField Name</Th>
-                <Th className={style.HeaderTbl}>Status</Th>
-                <Th className={style.HeaderTbl}>Price</Th>
-                <Th className={style.HeaderTbl}>Bank Code</Th>
-                <Th className={style.HeaderTbl}>Bank Brand</Th>
-                <Th className={style.HeaderTbl}>PlayField Owner's Name</Th>
+                <Th className={style.HeaderTbl} onClick={() => handleSort("bookingId")}>
+                  Booking Code {sortBy === "bookingId" && (sortDirection === "asc" ? "↑" : "↓")}
+                </Th>
+                <Th className={style.HeaderTbl} onClick={() => handleSort("bookingDate")}>
+                  Booking Date {sortBy === "bookingDate" && (sortDirection === "asc" ? "↑" : "↓")}
+                </Th>
+                <Th className={style.HeaderTbl} onClick={() => handleSort("playFieldName")}>
+                  PlayField Name{" "}
+                  {sortBy === "playFieldName" && (sortDirection === "asc" ? "↑" : "↓")}
+                </Th>
+                <Th className={style.HeaderTbl} onClick={() => handleSort("status")}>
+                  Status {sortBy === "status" && (sortDirection === "asc" ? "↑" : "↓")}
+                </Th>
+                <Th className={style.HeaderTbl} onClick={() => handleSort("price")}>
+                  Price {sortBy === "price" && (sortDirection === "asc" ? "↑" : "↓")}
+                </Th>
+                <Th className={style.HeaderTbl} onClick={() => handleSort("playFieldOwnerName")}>
+                  PlayField Owner's Name{" "}
+                  {sortBy === "playFieldOwnerName" && (sortDirection === "asc" ? "↑" : "↓")}
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -167,14 +240,14 @@ const PagmentHistory = () => {
                     <Loading />
                   </Td>
                 </Tr>
-              ) : data.length === 0 ? (
+              ) : sortedData.length === 0 ? (
                 <Tr>
                   <Td colSpan={10}>No Transaction History For Display</Td>
                 </Tr>
               ) : (
-                data.map((payment, index) => (
+                sortedData.map((payment, index) => (
                   <Tr key={payment.bookingId} className={style.PaymentHistoryItem}>
-                    <Td>{(currentPage - 1) * rowsPerPage + index + 1}</Td>
+                    <Td>{payment.bookingId}</Td>
                     <Td>{formatDateAndTime(payment.bookingDate)}</Td>
                     <Td>{payment.playField.playFieldName}</Td>
                     <Td>
@@ -191,8 +264,6 @@ const PagmentHistory = () => {
                       )}
                     </Td>
                     <Td>{formatCurrencyVND(payment.price.toString())}</Td>
-                    <Td>{payment.bankCode}</Td>
-                    <Td>{payment.bankName}</Td>
                     <Td>{payment.playFieldOwnerName}</Td>
                   </Tr>
                 ))
