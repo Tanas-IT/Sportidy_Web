@@ -38,7 +38,7 @@ function PaymentSuccess() {
 
       if (userIdParam && bookingCode) {
         try {
-          const result = await updatePaymentStatus(bookingCode, 3);
+          const result = await updatePaymentStatus(bookingCode, 1);
           if (result.data) {
             toast.success("Payment Success");
           }
