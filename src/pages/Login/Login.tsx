@@ -73,12 +73,13 @@ function Login() {
       if (response.httpCode === 200) {
         console.log("Response: ", response);
         const decodedToken = jwtDecode(response.accessToken) as UserLoginData;
+        console.log("role: ", decodedToken);
         localStorage.setItem("role", decodedToken.role.toString());
         localStorage.setItem("AccessToken", response.accessToken);
         localStorage.setItem("RefreshToken", response.refreshToken);
         const toastMessage = response.message;
 
-        if (decodedToken.role === "ADMIN") {
+        if (decodedToken.role.toUpperCase() === "ADMIN") {
           console.log("Test Success");
           localStorage.setItem("UserId", decodedToken.UserId.toString());
 
